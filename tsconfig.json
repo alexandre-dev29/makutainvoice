@@ -15,7 +15,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@makutainv/config": ["config/src/index.ts"],
+      "@makutainv/configs": ["configs/src/index.ts"],
       "@makutainv/types": ["types/src/index.ts"]
     },
     "jsx": "react-jsx",

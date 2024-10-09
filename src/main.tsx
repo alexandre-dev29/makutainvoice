@@ -1,13 +1,12 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 
-import Home from './app/home';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { makutaQueryClient } from '@makutainv/config';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { NotFoundComponent } from '@/components/not-found';
 import { routeTree } from '@/routes';
+import { makutaQueryClient } from '@makutainv/configs';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
