@@ -1,15 +1,24 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 import Home from '@/app/home';
 import Clients from '@/app/clients';
 import { rootRoute } from '@/mainRoute';
 import { LoginPage } from '@/app/login';
 import { RegisterPage } from '@/app/register';
 import { ForgotPasswordPage } from '@/app/forgot-password';
+import { supabase } from '@makutainv/configs';
 
 export const indexPage = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: Home,
+  beforeLoad: async ({}) => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session || !session.user) {
+      throw redirect({ to: '/auth/login' });
+    }
+  },
 });
 export const clientPage = createRoute({
   getParentRoute: () => rootRoute,
@@ -24,11 +33,27 @@ export const registerPage = createRoute({
   getParentRoute: () => indexAuthRoute,
   path: 'register',
   component: RegisterPage,
+  beforeLoad: async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session && session.user) {
+      throw redirect({ to: '/' });
+    }
+  },
 });
 export const loginPage = createRoute({
   getParentRoute: () => indexAuthRoute,
   path: 'login',
   component: LoginPage,
+  beforeLoad: async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session && session.user) {
+      throw redirect({ to: '/' });
+    }
+  },
 });
 export const forgotPassword = createRoute({
   getParentRoute: () => indexAuthRoute,

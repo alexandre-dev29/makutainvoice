@@ -43,6 +43,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Toaster } from '@/components/ui/toaster';
+import { supabase } from '@makutainv/configs';
 
 export const CoreLayout = () => {
   const { location } = useRouterState();
@@ -51,6 +52,7 @@ export const CoreLayout = () => {
     '/auth/register',
     '/auth/forgot-password',
   ];
+  const router = useRouter();
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -236,7 +238,7 @@ export const CoreLayout = () => {
                     size="icon"
                     className="overflow-hidden rounded-full"
                   >
-                    Click here
+                    AM
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -245,7 +247,18 @@ export const CoreLayout = () => {
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                   <DropdownMenuItem>Support</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={async () => {
+                      const { error } = await supabase.auth.signOut();
+                      if (!error) {
+                        await router.invalidate();
+                        await router.navigate({ to: '/' });
+                      }
+                    }}
+                  >
+                    Logout
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </header>

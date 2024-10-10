@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { Link } from '@tanstack/react-router';
+import { Link, useRouter } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@makutainv/configs';
 import * as z from 'zod';
@@ -18,6 +18,7 @@ import { useState } from 'react';
 
 export function LoginPage() {
   const { toast } = useToast();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const schema = z.object({
     email: z
@@ -47,6 +48,11 @@ export function LoginPage() {
         title: 'Error while trying to log you in',
         description: error?.message,
       });
+    }
+    if (data && data.user) {
+      myForm.reset();
+      await router.invalidate();
+      await router.navigate({ to: '/' });
     }
   };
   return (
