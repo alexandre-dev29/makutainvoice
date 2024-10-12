@@ -1,7 +1,6 @@
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Link } from '@tanstack/react-router';
+import { Link, useRouter } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import * as z from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -16,10 +15,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { ToastAction } from '@/components/ui/toast';
 
 export function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
+  const router = useRouter();
 
   const schema = z.object({
     email: z
@@ -33,9 +34,10 @@ export function ForgotPasswordPage() {
     email,
   }) => {
     setIsLoading(true);
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'http://localhost:4200/auth/update-password',
+    });
     setIsLoading(false);
-    console.log(error, data);
     if (error) {
       toast({
         variant: 'destructive',
@@ -44,6 +46,14 @@ export function ForgotPasswordPage() {
       });
     }
     forgotPasswordForm.reset();
+    toast({
+      title: 'Forgot password',
+      description:
+        'An email has been sent to you, please click on the link to reset your password',
+      action: <ToastAction altText="Goto schedule to undo">Okay</ToastAction>,
+    });
+    await router.invalidate();
+    await router.navigate({ to: '/auth/login' });
   };
   return (
     <Form {...forgotPasswordForm}>

@@ -6,12 +6,13 @@ import { LoginPage } from '@/app/login';
 import { RegisterPage } from '@/app/register';
 import { ForgotPasswordPage } from '@/app/forgot-password';
 import { supabase } from '@makutainv/configs';
+import { UpdatePasswordPage } from './app/update-password';
 
 export const indexPage = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: Home,
-  beforeLoad: async ({}) => {
+  beforeLoad: async () => {
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -61,8 +62,19 @@ export const forgotPassword = createRoute({
   component: ForgotPasswordPage,
 });
 
+export const updatePassword = createRoute({
+  getParentRoute: () => indexAuthRoute,
+  path: 'update-password',
+  component: UpdatePasswordPage,
+});
+
 export const routeTree = rootRoute.addChildren([
   indexPage,
   clientPage,
-  indexAuthRoute.addChildren([registerPage, loginPage, forgotPassword]),
+  indexAuthRoute.addChildren([
+    registerPage,
+    loginPage,
+    forgotPassword,
+    updatePassword,
+  ]),
 ]);

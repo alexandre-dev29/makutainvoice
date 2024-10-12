@@ -51,6 +51,7 @@ export const CoreLayout = () => {
     '/auth/login',
     '/auth/register',
     '/auth/forgot-password',
+    '/auth/update-password',
   ];
   const router = useRouter();
   return (

@@ -44,7 +44,7 @@ export function RegisterPage() {
     phoneNumber,
   }) => {
     setIsLoading(true);
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -70,7 +70,7 @@ export function RegisterPage() {
         action: <ToastAction altText="Goto schedule to undo">Okay</ToastAction>,
       });
       await router.invalidate();
-      await router.navigate({ to: '/' });
+      await router.navigate({ to: '/auth/login' });
     }
   };
   return (
