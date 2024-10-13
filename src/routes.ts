@@ -7,6 +7,8 @@ import { RegisterPage } from '@/app/register';
 import { ForgotPasswordPage } from '@/app/forgot-password';
 import { supabase } from '@makutainv/configs';
 import { UpdatePasswordPage } from './app/update-password';
+import CompaniesPage from './app/companies';
+import InvoicePage from './app/invoices';
 
 export const indexPage = createRoute({
   getParentRoute: () => rootRoute,
@@ -26,6 +28,17 @@ export const clientPage = createRoute({
   path: 'clients',
   component: Clients,
 });
+export const invoicePage = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'invoices',
+  component: InvoicePage,
+});
+export const compagniesPage = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'companies',
+  component: CompaniesPage,
+});
+
 export const indexAuthRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: 'auth',
@@ -71,6 +84,8 @@ export const updatePassword = createRoute({
 export const routeTree = rootRoute.addChildren([
   indexPage,
   clientPage,
+  invoicePage,
+  compagniesPage,
   indexAuthRoute.addChildren([
     registerPage,
     loginPage,

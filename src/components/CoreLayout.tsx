@@ -20,19 +20,14 @@ import {
   Settings,
   ShoppingCart,
   Users2,
+  FileSpreadsheetIcon,
+  HousePlus,
 } from 'lucide-react';
 import { ThemeProvider } from 'next-themes';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+
 import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
@@ -43,7 +38,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Toaster } from '@/components/ui/toaster';
-import { supabase } from '@makutainv/configs';
+import { makutaQueries, supabase, useCompanyState } from '@makutainv/configs';
+import { CompanyList } from './companies-list';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 export const CoreLayout = () => {
   const { location } = useRouterState();
@@ -54,6 +52,7 @@ export const CoreLayout = () => {
     '/auth/update-password',
   ];
   const router = useRouter();
+
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -61,66 +60,11 @@ export const CoreLayout = () => {
           <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
             <TooltipProvider>
               <nav className="flex flex-col items-center gap-4 px-2 py-4">
-                <Link
-                  to={'/'}
-                  className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-                >
-                  <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
-                  <span className="sr-only">Acme Inc</span>
-                </Link>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Link
-                      to={'/'}
-                      className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                    >
-                      <Home className="h-5 w-5" />
-                      <span className="sr-only">Dashboard</span>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">Dashboard</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Link
-                      to={'/clients'}
-                      className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8"
-                    >
-                      <ShoppingCart className="h-5 w-5" />
-                      <span className="sr-only">Orders</span>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">Orders</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Link
-                      href="#"
-                      className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                    >
-                      <Package className="h-5 w-5" />
-                      <span className="sr-only">Products</span>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">Products</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Link
-                      href="#"
-                      className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                    >
-                      <Users2 className="h-5 w-5" />
-                      <span className="sr-only">Customers</span>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">Customers</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Link
-                      href="#"
-                      className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                      to="/"
+                      className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
                     >
                       <LineChart className="h-5 w-5" />
                       <span className="sr-only">Analytics</span>
@@ -128,8 +72,46 @@ export const CoreLayout = () => {
                   </TooltipTrigger>
                   <TooltipContent side="right">Analytics</TooltipContent>
                 </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      to={'/invoices'}
+                      className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8"
+                    >
+                      <FileSpreadsheetIcon className="h-5 w-5" />
+                      <span className="sr-only">Invoices</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Invoices</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      to="/clients"
+                      className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                    >
+                      <Users2 className="h-5 w-5" />
+                      <span className="sr-only">Clients</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Clients</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      to="/companies"
+                      className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                    >
+                      <HousePlus className="h-5 w-5" />
+                      <span className="sr-only">Compagnies</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Compagnies</TooltipContent>
+                </Tooltip>
               </nav>
-              <nav className="mt-auto flex flex-col items-center gap-4 px-2 py-4">
+              {/* <nav className="mt-auto flex flex-col items-center gap-4 px-2 py-4">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Link
@@ -142,7 +124,7 @@ export const CoreLayout = () => {
                   </TooltipTrigger>
                   <TooltipContent side="right">Settings</TooltipContent>
                 </Tooltip>
-              </nav>
+              </nav> */}
             </TooltipProvider>
           </aside>
         )}
@@ -204,25 +186,7 @@ export const CoreLayout = () => {
                   </nav>
                 </SheetContent>
               </Sheet>
-              <Breadcrumb className="hidden md:flex">
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                      <Link href="#">Dashboard</Link>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                      <Link href="#">Products</Link>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>All Products</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
+              <CompanyList />
               <div className="relative ml-auto flex-1 md:grow-0">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
