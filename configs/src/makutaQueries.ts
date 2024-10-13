@@ -7,6 +7,11 @@ export const makutaQueries = createQueryKeyStore({
       queryKey: ['clients'],
       queryFn: async () => await supabase.from('clients').select('*'),
     }),
+    listByCompany: (companyId: number) => ({
+      queryKey: ['clients', `company-${companyId}`],
+      queryFn: async () =>
+        await supabase.from('clients').select('*').eq('company_id', companyId),
+    }),
   },
   companies: {
     list: () => ({

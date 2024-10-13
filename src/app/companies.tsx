@@ -1,18 +1,4 @@
 import {
-  DeleteIcon,
-  File,
-  ListFilter,
-  MoreHorizontal,
-  PenBox,
-  PlusCircle,
-  Trash2,
-} from 'lucide-react';
-
-import { Badge } from '@/components/ui/badge';
-
-import { Button } from '@/components/ui/button';
-
-import {
   Card,
   CardContent,
   CardDescription,
@@ -31,6 +17,7 @@ import {
 } from '@/components/ui/table';
 import { makutaQueries } from '@makutainv/configs';
 import { useQuery } from '@tanstack/react-query';
+import { AddUpdateCompany } from '@/components/add-update-company';
 
 const CompaniesPage = () => {
   const { data } = useQuery({
@@ -41,12 +28,7 @@ const CompaniesPage = () => {
     <div>
       <div className="flex items-center">
         <div className="ml-auto flex items-center gap-2">
-          <Button size="sm" className="p-5 flex gap-2">
-            <PlusCircle className="h-5 w-5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap text-[15px]">
-              Add company
-            </span>
-          </Button>
+          <AddUpdateCompany />
         </div>
       </div>
       <Card x-chunk="dashboard-06-chunk-0" className="mt-4">
@@ -80,17 +62,13 @@ const CompaniesPage = () => {
               {data &&
                 data.data &&
                 data.data.map(
-                  ({
-                    company_id,
-                    company_name,
-                    email,
-                    phone,
-                    address,
-                    created_at,
-                  }) => (
+                  (
+                    { company_name, email, phone, address, created_at },
+                    index
+                  ) => (
                     <TableRow>
                       <TableCell className="hidden sm:table-cell">
-                        {company_id}
+                        {index + 1}
                       </TableCell>
                       <TableCell className="font-medium">
                         {company_name}
@@ -104,8 +82,8 @@ const CompaniesPage = () => {
                         {created_at}
                       </TableCell>
                       <TableCell className="flex gap-4">
-                        <PenBox size={20} className="text-primary" />
-                        <Trash2 size={20} className="text-red-600" />
+                        {/* <PenBox size={20} className="text-primary" /> */}
+                        {/* <Trash2 size={20} className="text-red-600" /> */}
                       </TableCell>
                     </TableRow>
                   )
@@ -114,9 +92,9 @@ const CompaniesPage = () => {
           </Table>
         </CardContent>
         <CardFooter>
-          <div className="text-xs text-muted-foreground">
+          {/* <div className="text-xs text-muted-foreground">
             <strong>32</strong> companies
-          </div>
+          </div> */}
         </CardFooter>
       </Card>
     </div>
