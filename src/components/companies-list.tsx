@@ -36,7 +36,7 @@ export const CompanyList = () => {
         </SelectTrigger>
         <SelectContent>
           {data?.data?.map((value) => (
-            <SelectItem value={`${value.company_id}`}>
+            <SelectItem value={`${value.company_id}`} key={Math.random()}>
               <div className="flex items-start gap-3 text-muted-foreground">
                 <HousePlus className="size-5" />
                 <div className="grid gap-0.5">
