@@ -139,18 +139,15 @@ const CompaniesPage = () => {
                 {data &&
                   data.data &&
                   data.data.map(
-                    (
-                      {
-                        company_name,
-                        email,
-                        phone,
-                        address,
-                        created_at,
-                        logo,
-                        company_id,
-                      },
-                      index
-                    ) => (
+                    ({
+                      company_name,
+                      email,
+                      phone,
+                      address,
+                      created_at,
+                      logo,
+                      company_id,
+                    }) => (
                       <TableRow key={Math.random()}>
                         <TableCell className="hidden sm:table-cell">
                           {logo ? (

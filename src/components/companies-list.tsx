@@ -46,7 +46,7 @@ export const CompanyList = () => {
                       {value.email}
                     </span>
                   </p>
-                  <p className="text-xs" data-description>
+                  <p className="text-xs" data-description={value.address}>
                     {value.address}
                   </p>
                 </div>
