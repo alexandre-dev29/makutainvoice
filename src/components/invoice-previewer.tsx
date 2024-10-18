@@ -119,7 +119,7 @@ const InvoicePreviewer: FC<
           </Table>
           {props.invoiceNote && (
             <div className="bg-primary/20 px-4 py-1 rounded-md my-2">
-              <p>{props.invoiceNote}</p>
+              <p className="text-sm">{props.invoiceNote}</p>
             </div>
           )}
         </div>

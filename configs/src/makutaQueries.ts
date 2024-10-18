@@ -22,7 +22,10 @@ export const makutaQueries = createQueryKeyStore({
   invoices: {
     list: () => ({
       queryKey: ['invoices'],
-      queryFn: async () => await supabase.from('invoices').select('*'),
+      queryFn: async () =>
+        await supabase
+          .from('invoices')
+          .select('*, clients(client_name, phone, email)'),
     }),
   },
 });
