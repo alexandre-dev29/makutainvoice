@@ -30,6 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Link } from '@tanstack/react-router';
 
 export const description =
   'An products dashboard with a sidebar navigation. The sidebar has icon navigation. The content area has a breadcrumb and search in the header. It displays a list of products in a table with actions.';
@@ -64,12 +65,14 @@ export function HomePage() {
               Export
             </span>
           </Button>
-          <Button size="sm" className="h-7 gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Product
-            </span>
-          </Button>
+          <Link to="/invoices/create-invoice">
+            <Button size="sm" className="h-7 gap-1">
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Add Product
+              </span>
+            </Button>
+          </Link>
         </div>
       </div>
       <Card x-chunk="dashboard-06-chunk-0" className="mt-4">

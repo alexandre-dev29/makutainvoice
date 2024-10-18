@@ -11,21 +11,39 @@ import { useQuery } from '@tanstack/react-query';
 import { makutaQueries, useCompanyState } from '@makutainv/configs';
 
 export const CompanyList = () => {
-  const { currentCompany, setCurrentCompany } = useCompanyState();
+  const { currentCompany, setCurrentCompany, setCurrentInformation } =
+    useCompanyState();
   const { data, isPending } = useQuery({
     ...makutaQueries.companies.list(),
     staleTime: 1000 * 60 * 10,
   });
   if (!isPending && currentCompany === '' && data?.data) {
     setCurrentCompany(`${data?.data[0]?.company_id}`);
+    setCurrentInformation({
+      logo: `${data?.data[0]?.logo}`,
+      address: `${data?.data[0]?.address}`,
+      name: `${data?.data[0]?.company_name}`,
+      name: `${data?.data[0]?.phone}`,
+    });
   }
   if (isPending) return <p>Loading</p>;
   return (
-    <div className="w-2/12">
+    <div className="w-2/12 flex-1 md:grow-0">
       <Select
         value={currentCompany}
         onValueChange={(value) => {
           setCurrentCompany(value);
+          const company = data?.data?.filter(
+            (company) => company.company_id === Number.parseInt(value)
+          )[0];
+          if (company) {
+            setCurrentInformation({
+              logo: `${company.logo}`,
+              address: `${company.address}`,
+              name: `${company.company_name}`,
+              telephone: `${company.phone}`,
+            });
+          }
         }}
       >
         <SelectTrigger
