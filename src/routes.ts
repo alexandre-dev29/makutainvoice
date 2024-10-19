@@ -5,11 +5,12 @@ import { rootRoute } from '@/mainRoute';
 import { LoginPage } from '@/app/login';
 import { RegisterPage } from '@/app/register';
 import { ForgotPasswordPage } from '@/app/forgot-password';
-import { supabase } from '@makutainv/configs';
+import { makutaQueries, supabase } from '@makutainv/configs';
 import { UpdatePasswordPage } from './app/update-password';
 import CompaniesPage from './app/companies';
 import InvoicePage from './app/invoices';
 import { CreateInvoicePage } from '@/app/create-invoice';
+import InvoiceDetails from '@/app/invoiceDetails';
 
 export const indexPage = createRoute({
   getParentRoute: () => rootRoute,
@@ -33,6 +34,7 @@ export const invoicePage = createRoute({
   getParentRoute: () => rootRoute,
   path: 'invoices',
 });
+
 export const invoiceListPage = createRoute({
   getParentRoute: () => invoicePage,
   path: '/',
@@ -43,6 +45,13 @@ export const createInvoicePage = createRoute({
   getParentRoute: () => invoicePage,
   path: 'create-invoice',
   component: CreateInvoicePage,
+});
+export const invoiceDetails = createRoute({
+  getParentRoute: () => invoicePage,
+  path: '$invoiceNumber',
+  loader: ({ context: { queryClient }, params: { invoiceNumber } }) =>
+    queryClient.ensureQueryData(makutaQueries.invoices.details(invoiceNumber)),
+  component: InvoiceDetails,
 });
 
 export const compagniesPage = createRoute({
@@ -96,7 +105,7 @@ export const updatePassword = createRoute({
 export const routeTree = rootRoute.addChildren([
   indexPage,
   clientPage,
-  invoicePage.addChildren([invoiceListPage, createInvoicePage]),
+  invoicePage.addChildren([invoiceListPage, createInvoicePage, invoiceDetails]),
   compagniesPage,
   indexAuthRoute.addChildren([
     registerPage,

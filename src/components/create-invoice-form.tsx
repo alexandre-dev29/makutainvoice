@@ -113,7 +113,7 @@ const CreateInvoiceForm = () => {
         .insert([
           ...value.invoiceItems.map((item) => ({
             invoice_id: data.invoice_id,
-            description: `invoice item for ${item.itemName}`,
+            description: `${item.itemName}`,
             price: item.itemPrice,
             quantity: item.itemQuantity,
           })),

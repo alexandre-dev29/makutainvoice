@@ -44,6 +44,8 @@ import { useQuery } from '@tanstack/react-query';
 import { makutaQueries } from '@makutainv/configs';
 import { useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { DownloadCloudIcon, SendIcon } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 
 let data: Payment[] = [];
 
@@ -101,7 +103,12 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: 'invoiceNumber',
     header: () => <p className="font-bold">Invoice Number</p>,
     cell: ({ row }) => (
-      <p className="font-bold text-primary">{row.getValue('invoiceNumber')}</p>
+      <Link
+        to={`/invoices/${row.getValue('invoiceNumber')}`}
+        className="font-bold text-primary cursor-pointer"
+      >
+        {row.getValue('invoiceNumber')}
+      </Link>
     ),
   },
   {
@@ -231,15 +238,14 @@ export const columns: ColumnDef<Payment>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
+            <DropdownMenuItem className="cursor-pointer flex gap-2">
+              <DownloadCloudIcon size={16} />
+              Download PDF
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer flex gap-2">
+              <SendIcon size={16} />
+              Send to the client
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
