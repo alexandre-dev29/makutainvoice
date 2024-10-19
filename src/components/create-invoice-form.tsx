@@ -33,7 +33,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Separator } from '@/components/ui/separator';
-import { createInvoiceFormSchema, InvoiceItem } from '@makutainv/types';
+import { createInvoiceFormSchema } from '@makutainv/types';
 import {
   Select,
   SelectContent,

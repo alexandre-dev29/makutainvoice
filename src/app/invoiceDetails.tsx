@@ -32,7 +32,7 @@ const InvoiceDetails = () => {
     isLoading,
   } = useSuspenseQuery(makutaQueries.invoices.details(invoiceNumber));
   const { data: dataInvoiceitems } = useQuery({
-    ...makutaQueries.invoiceItems.listByInvoiceId(data!.invoice_id),
+    ...makutaQueries.invoiceItems.listByInvoiceId(data?.invoice_id ?? 1),
     enabled: !isLoading,
   });
 

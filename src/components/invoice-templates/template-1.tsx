@@ -50,6 +50,7 @@ export const InvoiceTemplate1 = ({
           email={`${invoiceData.companies?.email}`}
           address={`${invoiceData.companies?.address}`}
           company_id={invoiceData.company_id}
+          created_by_id={''}
         />
         <ClientInformation
           phone={`${invoiceData.clients?.phone}`}
@@ -57,6 +58,7 @@ export const InvoiceTemplate1 = ({
           address={`${invoiceData.clients?.address}`}
           client_name={`${invoiceData.clients?.client_name}`}
           client_id={invoiceData.clients?.client_id ?? 0}
+          company_id={invoiceData.company_id}
         />
         <Invoice1TableHead />
         <Invoice1TableBody
@@ -66,6 +68,8 @@ export const InvoiceTemplate1 = ({
               price: value.price,
               description: value.description,
               item_id: value.item_id,
+              invoice_id: value.invoice_id,
+              tax_rate: value.tax_rate,
             })),
           ]}
           currency={invoiceData.currency}
@@ -77,6 +81,8 @@ export const InvoiceTemplate1 = ({
               price: value.price,
               description: value.description,
               item_id: value.item_id,
+              invoice_id: value.invoice_id,
+              tax_rate: value.tax_rate,
             })),
           ]}
           currency={invoiceData.currency}
