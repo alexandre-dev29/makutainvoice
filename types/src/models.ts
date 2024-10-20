@@ -43,3 +43,13 @@ export type CompanyType = {
   logo: string | null;
   created_by_id: string | null;
 };
+
+export type PaymentsType = {
+  payment_id: number;
+  invoice_id: number;
+  payment_date: string;
+  amount: number;
+  payment_method: string | null;
+  reference: string | null;
+  invoices: { company_id: number; invoice_number: string } | null;
+};

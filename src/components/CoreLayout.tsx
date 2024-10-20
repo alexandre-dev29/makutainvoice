@@ -11,24 +11,20 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import {
+  FileSpreadsheetIcon,
   Home,
+  HousePlus,
   LineChart,
   Package,
   Package2,
   PanelLeft,
-  Search,
-  Settings,
   ShoppingCart,
   Users2,
-  FileSpreadsheetIcon,
-  HousePlus,
 } from 'lucide-react';
 import { ThemeProvider } from 'next-themes';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-
-import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,10 +34,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Toaster } from '@/components/ui/toaster';
-import { makutaQueries, supabase, useCompanyState } from '@makutainv/configs';
+import { supabase, useCompanyState, useCurrentUser } from '@makutainv/configs';
 import { CompanyList } from './companies-list';
-import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { getInitials } from '@/components/utils';
 
 export const CoreLayout = () => {
   const { location } = useRouterState();
@@ -53,6 +48,8 @@ export const CoreLayout = () => {
   ];
   const router = useRouter();
 
+  const { currentUser, setCurrentUser } = useCurrentUser();
+  const { setCurrentInformation, setCurrentCompany } = useCompanyState();
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -198,11 +195,11 @@ export const CoreLayout = () => {
                     size="icon"
                     className="overflow-hidden rounded-full"
                   >
-                    AM
+                    {getInitials(currentUser.name)}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuLabel>{currentUser.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                   <DropdownMenuItem>Support</DropdownMenuItem>
@@ -211,6 +208,19 @@ export const CoreLayout = () => {
                     className="cursor-pointer"
                     onClick={async () => {
                       const { error } = await supabase.auth.signOut();
+                      setCurrentUser({
+                        name: '',
+                        email: '',
+                        phone: '',
+                        id: '',
+                      });
+                      setCurrentCompany('');
+                      setCurrentInformation({
+                        telephone: '',
+                        logo: '',
+                        name: '',
+                        address: '',
+                      });
                       if (!error) {
                         await router.invalidate();
                         await router.navigate({ to: '/' });

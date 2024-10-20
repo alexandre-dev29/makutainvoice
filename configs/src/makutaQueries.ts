@@ -29,6 +29,23 @@ export const makutaQueries = createQueryKeyStore({
           .eq('invoice_id', invoiceId),
     }),
   },
+  dashboardRequests: {
+    listInvoiceMoneyByCompany: (companyId: number) => ({
+      queryKey: [`dashboard-invoices-${companyId}`, companyId],
+      queryFn: () =>
+        supabase
+          .from('invoices')
+          .select('invoice_number, total_paid, total_amount'),
+    }),
+    listOfPaymentsByCompany: (companyId: number) => ({
+      queryKey: [`dashboard-payments-${companyId}`, companyId],
+      queryFn: () =>
+        supabase
+          .from('payments')
+          .select('*, invoices(company_id, invoice_number)')
+          .eq('invoices.company_id', companyId),
+    }),
+  },
 
   invoices: {
     list: () => ({

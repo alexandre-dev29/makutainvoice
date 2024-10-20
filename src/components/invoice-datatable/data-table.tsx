@@ -221,32 +221,32 @@ export const columns: ColumnDef<Payment>[] = [
     ),
   },
 
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem className="cursor-pointer flex gap-2">
-              <DownloadCloudIcon size={16} />
-              Download PDF
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer flex gap-2">
-              <SendIcon size={16} />
-              Send to the client
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
+  // {
+  //   id: 'actions',
+  //   enableHiding: false,
+  //   cell: ({ row }) => {
+  //     return (
+  //       <DropdownMenu>
+  //         <DropdownMenuTrigger asChild>
+  //           <Button variant="ghost" className="h-8 w-8 p-0">
+  //             <span className="sr-only">Open menu</span>
+  //             <DotsHorizontalIcon className="h-4 w-4" />
+  //           </Button>
+  //         </DropdownMenuTrigger>
+  //         <DropdownMenuContent align="end">
+  //           <DropdownMenuItem className="cursor-pointer flex gap-2">
+  //             <DownloadCloudIcon size={16} />
+  //             Download PDF
+  //           </DropdownMenuItem>
+  //           <DropdownMenuItem className="cursor-pointer flex gap-2">
+  //             <SendIcon size={16} />
+  //             Send to the client
+  //           </DropdownMenuItem>
+  //         </DropdownMenuContent>
+  //       </DropdownMenu>
+  //     );
+  //   },
+  // },
 ];
 
 export function InvoiceDataTable() {

@@ -1,9 +1,11 @@
 import React from 'react';
-import { PDFViewer } from '@react-pdf/renderer';
+import { BlobProvider, PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { useParams } from '@tanstack/react-router';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { makutaQueries } from '@makutainv/configs';
 import { Separator } from '@/components/ui/separator';
+import { saveAs } from 'file-saver';
+
 import {
   Card,
   CardContent,
@@ -13,7 +15,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MoreVertical } from 'lucide-react';
+import { DownloadCloud, LucideSend, MoreVertical, Printer } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,6 +38,31 @@ const InvoiceDetails = () => {
     enabled: !isLoading,
   });
 
+  const handleShare = async (blob: Blob | null) => {
+    saveAs(blob ?? '', `${data?.invoice_number}.pdf`);
+    window.location.href = `mailto:${
+      data?.clients?.email
+    }?subject=${encodeURIComponent(`Invoice`)}&body=${encodeURIComponent(
+      `Kindly find attached invoice`
+    )}`;
+  };
+  const InvoiceDocument = () =>
+    data &&
+    dataInvoiceitems &&
+    dataInvoiceitems.data && (
+      <InvoiceTemplate1
+        invoiceData={{
+          ...data,
+          invoice_date: new Date(`${data?.invoice_date}`),
+          due_date: new Date(`${data?.due_date}`),
+          payment_terms: data?.payment_terms ?? '',
+          created_at: new Date(`${data?.created_at}`),
+          updated_at: new Date(`${data?.updated_at}`),
+        }}
+        items={dataInvoiceitems.data}
+      />
+    );
+
   return (
     <div className="flex gap-8">
       <div className=" flex-1">
@@ -57,10 +84,32 @@ const InvoiceDetails = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Download</DropdownMenuItem>
-                  <DropdownMenuItem>Send</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <PDFDownloadLink
+                      document={<InvoiceDocument />}
+                      fileName={`${data?.invoice_number}.pdf`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <DownloadCloud size={14} />
+                        <span>Download</span>
+                      </div>
+                    </PDFDownloadLink>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <BlobProvider document={<InvoiceDocument />}>
+                      {({ url, blob }) => (
+                        <button
+                          className="flex items-center gap-2 "
+                          onClick={() => handleShare(blob)}
+                        >
+                          <LucideSend size={14} />
+                          <span>Send to client</span>
+                        </button>
+                      )}
+                    </BlobProvider>
+                  </DropdownMenuItem>
+
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Delete</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -71,7 +120,10 @@ const InvoiceDetails = () => {
               <ul className="grid gap-3">
                 {dataInvoiceitems &&
                   dataInvoiceitems.data?.map((item) => (
-                    <li className="flex items-center justify-between">
+                    <li
+                      className="flex items-center justify-between"
+                      key={Math.random()}
+                    >
                       <span className="text-muted-foreground">
                         {item.description} x <span>{item.quantity}</span>
                       </span>
@@ -167,8 +219,10 @@ const InvoiceDetails = () => {
         <p className="text-destructive">
           If you see the report below please refresh the page
         </p>
-        {dataInvoiceitems && dataInvoiceitems.data && data && (
-          <PDFViewer width={1000} height={800}>
+        <PDFViewer width={1000} height={800}>
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-expect-error*/}
+          {dataInvoiceitems && dataInvoiceitems.data && data && (
             <InvoiceTemplate1
               invoiceData={{
                 ...data,
@@ -180,8 +234,8 @@ const InvoiceDetails = () => {
               }}
               items={dataInvoiceitems.data}
             />
-          </PDFViewer>
-        )}
+          )}
+        </PDFViewer>
       </div>
     </div>
   );

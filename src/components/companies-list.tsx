@@ -17,13 +17,20 @@ export const CompanyList = () => {
     ...makutaQueries.companies.list(),
     staleTime: 1000 * 60 * 10,
   });
-  if (!isPending && currentCompany === '' && data?.data) {
+  if (
+    !isPending &&
+    currentCompany &&
+    currentCompany !== 'undefined' &&
+    currentCompany === '' &&
+    data?.data &&
+    data?.data[0]
+  ) {
     setCurrentCompany(`${data?.data[0]?.company_id}`);
     setCurrentInformation({
       logo: `${data?.data[0]?.logo}`,
       address: `${data?.data[0]?.address}`,
       name: `${data?.data[0]?.company_name}`,
-      name: `${data?.data[0]?.phone}`,
+      telephone: `${data?.data[0]?.phone}`,
     });
   }
   if (isPending) return <p>Loading</p>;

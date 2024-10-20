@@ -13,6 +13,16 @@ type companyInformation = {
   address: string;
   telephone: string;
 };
+type UserType = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+};
+type currentUserTypeState = {
+  currentUser: UserType;
+  setCurrentUser: (currentUser: UserType) => void;
+};
 
 export const useCompanyState = create<companyStateProps>()(
   devtools(
@@ -27,6 +37,21 @@ export const useCompanyState = create<companyStateProps>()(
       }),
       {
         name: 'makuta-company-states',
+      }
+    )
+  )
+);
+export const useCurrentUser = create<currentUserTypeState>()(
+  devtools(
+    persist(
+      (set) => ({
+        currentUser: { name: '', phone: '', email: '', id: '' },
+
+        setCurrentUser: (currentUser: UserType) =>
+          set({ currentUser: currentUser }),
+      }),
+      {
+        name: 'makuta-user-states',
       }
     )
   )
