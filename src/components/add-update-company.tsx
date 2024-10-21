@@ -75,7 +75,7 @@ export const AddUpdateCompany = () => {
       addCompanyForm.reset();
       toast({
         title: 'Company created',
-        description: 'The companhy has been created successfully.',
+        description: 'The company has been created successfully.',
         action: <ToastAction altText="Okay">Okay</ToastAction>,
       });
       // invalidate all the list queries

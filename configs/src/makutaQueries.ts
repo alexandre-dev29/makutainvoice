@@ -19,6 +19,14 @@ export const makutaQueries = createQueryKeyStore({
       queryFn: async () => await supabase.from('companies').select('*'),
     }),
   },
+  payments: {
+    listByInvoice: (invoiceId: number) => ({
+      queryKey: [`payments-invoice-${invoiceId}`],
+      queryFn: async () =>
+        await supabase.from('payments').select('*').eq('invoice_id', invoiceId),
+    }),
+  },
+
   invoiceItems: {
     listByInvoiceId: (invoiceId: number) => ({
       queryKey: [`invoice-${invoiceId}`, invoiceId],
