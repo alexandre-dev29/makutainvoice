@@ -11,8 +11,6 @@ import { MonthlyRevenueType, PaymentsType } from '@makutainv/types';
 import { useMemo } from 'react';
 import { calculateTotalRevenueByMonth } from '@/components/utils';
 
-export const description = 'A bar chart';
-
 const chartConfig = {
   desktop: {
     label: 'Payments',
@@ -31,6 +29,7 @@ export function MonthlyPayments({ revenues }: MonthlyPaymentsProps) {
     const allPaymentRevenue = revenues.map((value) => ({
       monthName: formatter.format(new Date(value.payment_date)),
       monthRevenue: value.amount,
+      monthNumber: new Date(value.payment_date).getMonth(),
     }));
     return calculateTotalRevenueByMonth(allPaymentRevenue);
   }, [revenues]);

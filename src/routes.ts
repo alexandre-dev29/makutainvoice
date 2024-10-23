@@ -11,6 +11,7 @@ import CompaniesPage from './app/companies';
 import InvoicePage from './app/invoices';
 import { CreateInvoicePage } from '@/app/create-invoice';
 import InvoiceDetails from '@/app/invoiceDetails';
+import PaymentsPage from '@/app/payments';
 
 export const indexPage = createRoute({
   getParentRoute: () => rootRoute,
@@ -59,6 +60,11 @@ export const compagniesPage = createRoute({
   path: 'companies',
   component: CompaniesPage,
 });
+export const paymentsPage = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'payments',
+  component: PaymentsPage,
+});
 
 export const indexAuthRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -105,6 +111,7 @@ export const updatePassword = createRoute({
 export const routeTree = rootRoute.addChildren([
   indexPage,
   clientPage,
+  paymentsPage,
   invoicePage.addChildren([invoiceListPage, createInvoicePage, invoiceDetails]),
   compagniesPage,
   indexAuthRoute.addChildren([

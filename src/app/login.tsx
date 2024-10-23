@@ -52,7 +52,7 @@ export function LoginPage() {
     if (data && data.user) {
       myForm.reset();
       await router.invalidate();
-      await router.navigate({ to: '/' });
+      document.location.replace('/');
     }
   };
   return (
@@ -113,9 +113,9 @@ export function LoginPage() {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? 'Loading...' : 'Login'}
             </Button>
-            <Button variant="outline" className="w-full">
-              Login with Google
-            </Button>
+            {/*<Button variant="outline" className="w-full">*/}
+            {/*  Login with Google*/}
+            {/*</Button>*/}
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{' '}
               <Link to={'/auth/register'} className="underline">

@@ -25,10 +25,11 @@ export const calculateTotalRevenueByMonth = (
     totalRevenueByMonth.push({
       monthName,
       monthRevenue: totalRevenue,
+      monthNumber: groupedData[monthName][0].monthNumber,
     });
   }
 
-  return totalRevenueByMonth;
+  return totalRevenueByMonth.sort((a, b) => a.monthNumber - b.monthNumber);
 };
 
 export const getInitials = (fullName: string) => {

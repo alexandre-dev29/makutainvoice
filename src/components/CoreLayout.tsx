@@ -11,6 +11,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import {
+  CircleDollarSign,
   FileSpreadsheetIcon,
   Home,
   HousePlus,
@@ -81,6 +82,18 @@ export const CoreLayout = () => {
                     </Link>
                   </TooltipTrigger>
                   <TooltipContent side="right">Invoices</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      to={'/payments'}
+                      className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8"
+                    >
+                      <CircleDollarSign className="h-5 w-5" />
+                      <span className="sr-only">Payments</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Payments</TooltipContent>
                 </Tooltip>
 
                 <Tooltip>

@@ -19,7 +19,7 @@ import {
   useCompanyState,
 } from '@makutainv/configs';
 import { ToastAction } from '@/components/ui/toast';
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as z from 'zod';
 import {
@@ -39,25 +39,30 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { Calendar } from '@/components/ui/calendar';
+import { FileSpreadsheetIcon, PlusCircle, User2 } from 'lucide-react';
+import { InvoiceType } from '@makutainv/types';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
-type makePaymentProps = {
-  invoice_id: number;
-  invoice_number: string;
-  isOpen: boolean;
-  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-export const MakeInvoicePayment: FC<makePaymentProps> = ({
-  invoice_id,
-  invoice_number,
-  isOpen,
-  setModalOpen,
+export const MakeInvoicePayment = ({
+  invoiceList,
+}: {
+  invoiceList: Array<InvoiceType>;
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { currentCompany } = useCompanyState();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  const { currentCompany } = useCompanyState();
   const makePaymentSchema = z.object({
     paymentDate: z.date({ message: 'The date is required' }),
+    invoiceNumber: z.coerce.number({
+      message: 'The invoice number is required',
+    }),
     amount: z.coerce
       .number()
       .min(1, { message: 'The amount must be greater than 0' }),
@@ -67,19 +72,25 @@ export const MakeInvoicePayment: FC<makePaymentProps> = ({
   const addPaymentForm = useForm<z.infer<typeof makePaymentSchema>>({
     resolver: zodResolver(makePaymentSchema),
   });
+  const selectedInvoiceNumber = addPaymentForm.watch('invoiceNumber');
+  const selectedIncoice = invoiceList.filter(
+    (value) => value.invoice_id === selectedInvoiceNumber
+  )[0];
+
   const sendAddPayment: SubmitHandler<
     z.infer<typeof makePaymentSchema>
-  > = async ({ paymentDate, payment_method, payment_reference, amount }) => {
+  > = async ({
+    paymentDate,
+    payment_method,
+    invoiceNumber,
+    payment_reference,
+    amount,
+  }) => {
     setIsLoading(true);
-    const { data: dataInvoice } = await supabase
-      .from('invoices')
-      .select('invoice_id, invoice_number, total_amount, total_paid')
-      .eq('invoice_id', invoice_id)
-      .single();
 
     const { error } = await supabase.from('payments').insert({
-      invoice_id: invoice_id,
-      payment_date: paymentDate.toString(),
+      invoice_id: invoiceNumber,
+      payment_date: paymentDate.toISOString(),
       payment_method: payment_method,
       amount: amount,
       reference: payment_reference,
@@ -96,7 +107,8 @@ export const MakeInvoicePayment: FC<makePaymentProps> = ({
     if (!error) {
       const { error: errorUpdate } = await supabase
         .from('invoices')
-        .update({ total_paid: (dataInvoice?.total_paid ?? 0) + amount });
+        .update({ total_paid: (selectedIncoice?.total_paid ?? 0) + amount })
+        .eq('invoice_id', invoiceNumber);
 
       if (!errorUpdate) {
         addPaymentForm.reset();
@@ -108,11 +120,18 @@ export const MakeInvoicePayment: FC<makePaymentProps> = ({
         });
         // invalidate all the list queries
         await makutaQueryClient.invalidateQueries({
+          queryKey: makutaQueries.payments.listByCompany(
+            Number.parseInt(currentCompany)
+          ).queryKey,
+          refetchType: 'active',
+        });
+        await makutaQueryClient.invalidateQueries({
           queryKey: makutaQueries.dashboardRequests.listOfPaymentsByCompany(
             Number.parseInt(currentCompany)
           ).queryKey,
           refetchType: 'active',
         });
+
         await makutaQueryClient.invalidateQueries({
           queryKey: makutaQueries.dashboardRequests.listInvoiceMoneyByCompany(
             Number.parseInt(currentCompany)
@@ -120,12 +139,20 @@ export const MakeInvoicePayment: FC<makePaymentProps> = ({
           refetchType: 'active',
         });
 
-        setModalOpen(false);
+        setIsModalOpen(false);
       }
     }
   };
   return (
-    <Dialog open={isOpen} onOpenChange={setModalOpen}>
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogTrigger asChild>
+        <Button size="sm" className="p-5 flex gap-2">
+          <PlusCircle className="h-5 w-5" />
+          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap text-[15px]">
+            Add payment
+          </span>
+        </Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...addPaymentForm}>
           <form
@@ -133,12 +160,49 @@ export const MakeInvoicePayment: FC<makePaymentProps> = ({
             className="grid gap-4 py-4"
           >
             <DialogHeader>
-              <DialogTitle>Add a new payment for {invoice_number}</DialogTitle>
+              <DialogTitle>Add a new payment </DialogTitle>
               <DialogDescription>
                 create a new payment, fill information and click Save.
               </DialogDescription>
             </DialogHeader>
 
+            <FormField
+              control={addPaymentForm.control}
+              name="invoiceNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Invoice number</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select an invoice" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {invoiceList.map((value) => (
+                        <SelectItem
+                          value={`${value.invoice_id}`}
+                          key={value.invoice_id}
+                        >
+                          <div className="flex items-start gap-3 text-muted-foreground">
+                            <FileSpreadsheetIcon className="size-5" />
+                            <div className="grid gap-0.5">
+                              <p>
+                                {value.invoice_number}
+                                <span className="font-medium text-foreground ml-2">
+                                  {`${value.total_amount} ${value.currency}`}
+                                </span>
+                              </p>
+                            </div>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={addPaymentForm.control}
               name="amount"

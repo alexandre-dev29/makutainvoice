@@ -1,11 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from '@radix-ui/react-icons';
+import { CaretSortIcon, ChevronDownIcon } from '@radix-ui/react-icons';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -25,7 +21,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
@@ -40,16 +35,10 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { makutaQueries } from '@makutainv/configs';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  BadgeDollarSign,
-  DollarSignIcon,
-  DownloadCloudIcon,
-  SendIcon,
-} from 'lucide-react';
+
 import { Link } from '@tanstack/react-router';
-import { MakeInvoicePayment } from '@/components/make-payment';
 
 let data: Payment[] = [];
 
@@ -80,12 +69,7 @@ const getBadgeColor = (status: string) => {
   }
 };
 
-export const columns = (
-  setSelectedInvoice: React.Dispatch<
-    React.SetStateAction<{ invoice_id: number; invoice_number: string }>
-  >,
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
-): ColumnDef<Payment>[] => [
+export const columns: ColumnDef<Payment>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -232,37 +216,28 @@ export const columns = (
     ),
   },
 
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              className="cursor-pointer flex gap-2"
-              onClick={() => {
-                setSelectedInvoice({
-                  invoice_id: row.original.id,
-                  invoice_number: row.original.invoiceNumber,
-                });
-                setIsModalOpen(true);
-              }}
-            >
-              <DollarSignIcon size={16} />
-              Make payment
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
+  // {
+  //   id: 'actions',
+  //   enableHiding: false,
+  //   cell: ({ row }) => {
+  //     return (
+  //       <DropdownMenu>
+  //         <DropdownMenuTrigger asChild>
+  //           <Button variant="ghost" className="h-8 w-8 p-0">
+  //             <span className="sr-only">Open menu</span>
+  //             <DotsHorizontalIcon className="h-4 w-4" />
+  //           </Button>
+  //         </DropdownMenuTrigger>
+  //         <DropdownMenuContent align="end">
+  //           <DropdownMenuItem className="cursor-pointer flex gap-2">
+  //             <DollarSignIcon size={16} />
+  //             Make payment
+  //           </DropdownMenuItem>
+  //         </DropdownMenuContent>
+  //       </DropdownMenu>
+  //     );
+  //   },
+  // },
 ];
 
 export function InvoiceDataTable() {
@@ -273,11 +248,6 @@ export function InvoiceDataTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedInvoice, setSelectedInvoice] = useState<{
-    invoice_id: number;
-    invoice_number: string;
-  }>({ invoice_id: 0, invoice_number: '' });
   const { data: dataInvoices, isLoading } = useQuery({
     ...makutaQueries.invoices.list(),
     staleTime: 1000 * 60 * 10,
@@ -311,7 +281,7 @@ export function InvoiceDataTable() {
 
   const table = useReactTable({
     data,
-    columns: columns(setSelectedInvoice, setIsModalOpen),
+    columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -456,12 +426,6 @@ export function InvoiceDataTable() {
             </Button>
           </div>
         </div>
-        <MakeInvoicePayment
-          invoice_id={selectedInvoice.invoice_id}
-          invoice_number={selectedInvoice.invoice_number}
-          isOpen={isModalOpen}
-          setModalOpen={setIsModalOpen}
-        />
       </div>
     );
   }

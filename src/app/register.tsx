@@ -144,9 +144,9 @@ export function RegisterPage() {
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? 'Loading...' : 'Register'}
               </Button>
-              <Button variant="outline" className="w-full">
-                Register with Google
-              </Button>
+              {/*<Button variant="outline" className="w-full">*/}
+              {/*  Register with Google*/}
+              {/*</Button>*/}
             </div>
             <div className="mt-4 text-center text-sm">
               Already have an account?{' '}
