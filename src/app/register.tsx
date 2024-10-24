@@ -48,6 +48,7 @@ export function RegisterPage() {
       email,
       password,
       options: {
+        emailRedirectTo: import.meta.env.VITE_WEBSERVER,
         data: {
           name,
           phoneNumber,

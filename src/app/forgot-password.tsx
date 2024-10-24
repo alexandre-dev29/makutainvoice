@@ -35,7 +35,7 @@ export function ForgotPasswordPage() {
   }) => {
     setIsLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'http://localhost:4200/auth/update-password',
+      redirectTo: `${import.meta.env.VITE_WEBSERVER}/auth/update-password`,
     });
     setIsLoading(false);
     if (error) {
