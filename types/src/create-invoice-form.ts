@@ -3,9 +3,7 @@ import * as z from 'zod';
 export const createInvoiceFormSchema = z.object({
   clientId: z.string({ message: 'The client required' }),
   invoiceNumber: z.string({ message: 'The invoice number is required' }),
-  invoiceDueDate: z
-    .date({ message: 'The invoice date is required' })
-    .min(new Date()),
+  invoiceDueDate: z.date({ message: 'The invoice date is required' }),
   currency: z.string({ message: 'The invoice currency' }).min(3),
   invoiceItems: z
     .object({
