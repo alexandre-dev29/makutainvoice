@@ -59,7 +59,7 @@ export const makutaQueries = createQueryKeyStore({
       queryFn: () =>
         supabase
           .from('payments')
-          .select('*, invoices(company_id, invoice_number)')
+          .select('*, invoices!inner(company_id, invoice_number)')
           .eq('invoices.company_id', companyId),
     }),
   },
