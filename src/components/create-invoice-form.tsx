@@ -27,6 +27,7 @@ import { format } from 'date-fns';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -60,6 +61,7 @@ import InvoicePreviewer from '@/components/invoice-previewer';
 import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from '@tanstack/react-router';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const CreateInvoiceForm = () => {
   const { currentCompany } = useCompanyState();
@@ -67,6 +69,7 @@ const CreateInvoiceForm = () => {
     resolver: zodResolver(createInvoiceFormSchema),
     defaultValues: {
       invoiceItems: [{ itemQuantity: 1, itemPrice: 1, itemName: '' }],
+      isDraft: false,
     },
   });
   const { toast } = useToast();
@@ -99,9 +102,10 @@ const CreateInvoiceForm = () => {
         invoice_number: value.invoiceNumber,
         invoice_date: new Date().toISOString(),
         currency: value.currency,
-        status: 'Active',
+        status: value.isDraft ? 'Draft' : 'Active',
         due_date: value.invoiceDueDate.toISOString(),
         notes: value.invoiceNote,
+        isDraft: value.isDraft,
         total_amount: total,
         created_by_id: `${currentUser.data.session?.user.id}`,
       })
@@ -270,6 +274,27 @@ const CreateInvoiceForm = () => {
                           </PopoverContent>
                         </Popover>
                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={invoiceForm.control}
+                    name="isDraft"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>Is this a draft invoice ?</FormLabel>
+                          <FormDescription>
+                            Please check the box if this is a draft invoice so
+                            that it will not be considered in calculations
+                          </FormDescription>
+                        </div>
                       </FormItem>
                     )}
                   />
