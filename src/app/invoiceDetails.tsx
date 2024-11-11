@@ -15,7 +15,13 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { DownloadCloud, LucideSend, MoreVertical, Printer } from 'lucide-react';
+import {
+  CheckSquareIcon,
+  DownloadCloud,
+  LucideSend,
+  MoreVertical,
+  Printer,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +30,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { InvoiceTemplate1 } from '@/components/invoice-templates/template-1';
+
+import { MakeInvoiceActive } from '@/components/make-invoice-active';
 
 const InvoiceDetails = () => {
   const { invoiceNumber } = useParams({
@@ -74,6 +82,12 @@ const InvoiceDetails = () => {
                 <span className="text-primary">{data?.invoice_number}</span>
               </CardTitle>
               <CardDescription>Date: November 23, 2023</CardDescription>
+              {data?.isDraft && (
+                <MakeInvoiceActive
+                  invoiceId={data.invoice_id}
+                  isDraft={data.isDraft ?? false}
+                />
+              )}
             </div>
             <div className="ml-auto flex items-center gap-1">
               <DropdownMenu>
@@ -108,7 +122,7 @@ const InvoiceDetails = () => {
                       )}
                     </BlobProvider>
                   </DropdownMenuItem>
-
+                  <DropdownMenuItem></DropdownMenuItem>
                   <DropdownMenuSeparator />
                 </DropdownMenuContent>
               </DropdownMenu>
