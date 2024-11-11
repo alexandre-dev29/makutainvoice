@@ -42,6 +42,7 @@ export const InvoiceTemplate1 = ({
             'fr-FR'
           )}`}
           logoSrc={`${invoiceData.companies?.logo}`}
+          isDraft={invoiceData.isDraft ?? false}
         />
         <CompanyInformation
           company_name={`${invoiceData.companies?.company_name}`}

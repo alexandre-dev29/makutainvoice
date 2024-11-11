@@ -6,9 +6,11 @@ export const InvoiceTitle = ({
   invoiceNumber,
   invoiceDueDate,
   logoSrc,
+  isDraft,
 }: {
   invoiceNumber: string;
   invoiceDueDate: string;
+  isDraft: boolean;
   logoSrc: string;
 }) => (
   <View style={template_1_style.titleContainer}>
@@ -20,6 +22,19 @@ export const InvoiceTitle = ({
         <Text style={template_1_style.reportSubTitle}>
           Due Date : {invoiceDueDate}
         </Text>
+        {isDraft && (
+          <Text
+            style={{
+              ...template_1_style.reportSubTitle,
+              marginTop: 5,
+              fontSize: 14,
+              fontWeight: 'bold',
+              color: 'hsl(262.1 83.3% 57.8%)',
+            }}
+          >
+            Proforma
+          </Text>
+        )}
       </View>
       <View
         style={{
