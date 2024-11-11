@@ -52,7 +52,8 @@ export const makutaQueries = createQueryKeyStore({
         supabase
           .from('invoices')
           .select('invoice_number, total_paid, total_amount')
-          .eq('company_id', companyId),
+          .eq('company_id', companyId)
+          .eq('isDraft', false),
     }),
     listOfPaymentsByCompany: (companyId: number) => ({
       queryKey: [`dashboard-payments-${companyId}`],
@@ -72,6 +73,16 @@ export const makutaQueries = createQueryKeyStore({
           .from('invoices')
           .select('*, clients(client_name, phone, email)'),
     }),
+    listActiveAndNotComplete: () => ({
+      queryKey: ['invoices'],
+      queryFn: async () =>
+        await supabase
+          .from('invoices')
+          .select('*, clients(client_name, phone, email)')
+          .eq('isDraft', false)
+          .eq('isPaid', false),
+    }),
+
     details: (invoiceNumber: string) => ({
       queryKey: [`invoices-${invoiceNumber}`, `${invoiceNumber}`],
       queryFn: () =>
