@@ -29,7 +29,7 @@ const InvoicePreviewer: FC<
   return (
     <Card
       x-chunk="dashboard-07-chunk-0"
-      className="bg-gray-100 col-span-2 p-4 min-h-[80vh]"
+      className="bg-gray-100 col-span-2 p-4 min-h-[80vh] relative"
     >
       <h5 className="font-bold text-2xl text-gray-800">Preview</h5>
       <div className="bg-white h-[73vh] mt-2 shadow-sm rounded-xl border-2 border-gray-200 py-8 px-10">
@@ -120,6 +120,11 @@ const InvoicePreviewer: FC<
           {props.invoiceNote && (
             <div className="bg-primary/20 px-4 py-1 rounded-md my-2">
               <p className="text-sm">{props.invoiceNote}</p>
+            </div>
+          )}
+          {props.isDraft && (
+            <div className="px-4 py-1 rounded-md my-2 absolute bottom-8">
+              <p className="text-xl text-primary/50 font-bold">Proforma</p>
             </div>
           )}
         </div>

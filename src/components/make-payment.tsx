@@ -138,6 +138,15 @@ export const MakeInvoicePayment = ({
           ).queryKey,
           refetchType: 'active',
         });
+        await makutaQueryClient.invalidateQueries({
+          queryKey: makutaQueries.invoices.listActiveAndNotComplete._def,
+          refetchType: 'active',
+        });
+
+        await makutaQueryClient.invalidateQueries({
+          queryKey: makutaQueries.invoices.list._def,
+          refetchType: 'active',
+        });
 
         setIsModalOpen(false);
       }
