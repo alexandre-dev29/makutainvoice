@@ -148,15 +148,7 @@ export type Database = {
           phone?: string | null
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "companies_created_by_id_fkey"
-            columns: ["created_by_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       invoicehistory: {
         Row: {
@@ -187,13 +179,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "invoices"
             referencedColumns: ["invoice_id"]
-          },
-          {
-            foreignKeyName: "invoicehistory_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
           },
         ]
       }
@@ -270,6 +255,8 @@ export type Database = {
           invoice_date: string
           invoice_id: number
           invoice_number: string
+          isDraft: boolean | null
+          isPaid: boolean
           notes: string | null
           payment_terms: string | null
           status: string
@@ -289,6 +276,8 @@ export type Database = {
           invoice_date: string
           invoice_id?: number
           invoice_number: string
+          isDraft?: boolean | null
+          isPaid?: boolean
           notes?: string | null
           payment_terms?: string | null
           status?: string
@@ -308,6 +297,8 @@ export type Database = {
           invoice_date?: string
           invoice_id?: number
           invoice_number?: string
+          isDraft?: boolean | null
+          isPaid?: boolean
           notes?: string | null
           payment_terms?: string | null
           status?: string
@@ -330,13 +321,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "companies"
             referencedColumns: ["company_id"]
-          },
-          {
-            foreignKeyName: "invoices_created_by_id_fkey"
-            columns: ["created_by_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "invoices_template_id_fkey"
@@ -456,13 +440,6 @@ export type Database = {
             referencedRelation: "invoicetemplates"
             referencedColumns: ["template_id"]
           },
-          {
-            foreignKeyName: "userpreferences_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
         ]
       }
     }
@@ -561,4 +538,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
