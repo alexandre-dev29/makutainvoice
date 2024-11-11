@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/table';
 import { useQuery } from '@tanstack/react-query';
 import { makutaQueries, useCompanyState } from '@makutainv/configs';
-import { AddClients } from '@/components/add-clients';
 import { MakeInvoicePayment } from '@/components/make-payment';
 import { InvoiceType } from '@makutainv/types';
 
@@ -29,7 +28,7 @@ const PaymentsPage = () => {
     staleTime: 1000 * 60 * 10,
   });
   const { data: dataInvoices } = useQuery({
-    ...makutaQueries.invoices.list(),
+    ...makutaQueries.invoices.listActiveAndNotComplete(),
     staleTime: 1000 * 60 * 10,
   });
   const invoiceList: Array<InvoiceType> =
