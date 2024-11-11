@@ -11,6 +11,8 @@ export type InvoiceType = {
   notes?: string | null;
   total_amount?: number | null;
   total_paid?: number | null;
+  isDraft: boolean | null;
+  isPaid: boolean;
   created_at: Date;
   updated_at: Date;
   clients: ClientType | null;

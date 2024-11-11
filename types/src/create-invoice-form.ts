@@ -18,4 +18,5 @@ export const createInvoiceFormSchema = z.object({
     .array()
     .min(1),
   invoiceNote: z.string().optional(),
+  isDraft: z.boolean().default(false),
 });
