@@ -12,6 +12,7 @@ import InvoicePage from './app/invoices';
 import { CreateInvoicePage } from '@/app/create-invoice';
 import InvoiceDetails from '@/app/invoiceDetails';
 import PaymentsPage from '@/app/payments';
+import { ClientDetails } from '@/app/clientDetails';
 
 export const indexPage = createRoute({
   getParentRoute: () => rootRoute,
@@ -29,8 +30,23 @@ export const indexPage = createRoute({
 export const clientPage = createRoute({
   getParentRoute: () => rootRoute,
   path: 'clients',
+});
+export const clientList = createRoute({
+  getParentRoute: () => clientPage,
+  path: '/',
   component: Clients,
 });
+
+export const clientDetailsPage = createRoute({
+  getParentRoute: () => clientPage,
+  path: '$clientNumber',
+  component: ClientDetails,
+  loader: ({ context: { queryClient }, params: { clientNumber } }) =>
+    queryClient.ensureQueryData(
+      makutaQueries.clients.details(parseInt(clientNumber))
+    ),
+});
+
 export const invoicePage = createRoute({
   getParentRoute: () => rootRoute,
   path: 'invoices',
@@ -110,7 +126,7 @@ export const updatePassword = createRoute({
 
 export const routeTree = rootRoute.addChildren([
   indexPage,
-  clientPage,
+  clientPage.addChildren([clientDetailsPage, clientList]),
   paymentsPage,
   invoicePage.addChildren([invoiceListPage, createInvoicePage, invoiceDetails]),
   compagniesPage,
