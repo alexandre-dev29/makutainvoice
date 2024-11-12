@@ -73,9 +73,11 @@ export const MakeInvoicePayment = ({
     resolver: zodResolver(makePaymentSchema),
   });
   const selectedInvoiceNumber = addPaymentForm.watch('invoiceNumber');
-  const selectedIncoice = invoiceList.filter(
-    (value) => value.invoice_id === selectedInvoiceNumber
+  const selectedInvoice = invoiceList.filter(
+    (value) => value.invoice_id == selectedInvoiceNumber
   )[0];
+
+  console.log(selectedInvoiceNumber, selectedInvoice);
 
   const sendAddPayment: SubmitHandler<
     z.infer<typeof makePaymentSchema>
@@ -107,7 +109,7 @@ export const MakeInvoicePayment = ({
     if (!error) {
       const { error: errorUpdate } = await supabase
         .from('invoices')
-        .update({ total_paid: (selectedIncoice?.total_paid ?? 0) + amount })
+        .update({ total_paid: (selectedInvoice?.total_paid ?? 0) + amount })
         .eq('invoice_id', invoiceNumber);
 
       if (!errorUpdate) {
@@ -118,6 +120,7 @@ export const MakeInvoicePayment = ({
           description: 'The payment has been created successfully.',
           action: <ToastAction altText="Okay">Okay</ToastAction>,
         });
+        setIsModalOpen(false);
         // invalidate all the list queries
         await makutaQueryClient.invalidateQueries({
           queryKey: makutaQueries.payments.listByCompany(
@@ -147,8 +150,6 @@ export const MakeInvoicePayment = ({
           queryKey: makutaQueries.invoices.list._def,
           refetchType: 'active',
         });
-
-        setIsModalOpen(false);
       }
     }
   };

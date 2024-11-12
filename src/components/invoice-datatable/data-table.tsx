@@ -40,7 +40,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 import { Link } from '@tanstack/react-router';
 
-let data: Payment[] = [];
+const data: Payment[] = [];
 
 export type Payment = {
   id: number;
@@ -70,28 +70,6 @@ const getBadgeColor = (status: string) => {
 };
 
 export const columns: ColumnDef<Payment>[] = [
-  // {
-  //   id: 'select',
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       checked={
-  //         table.getIsAllPageRowsSelected() ||
-  //         (table.getIsSomePageRowsSelected() && 'indeterminate')
-  //       }
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //     />
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
   {
     accessorKey: 'invoiceNumber',
     header: () => <p className="font-bold">Invoice Number</p>,
@@ -215,29 +193,6 @@ export const columns: ColumnDef<Payment>[] = [
       </Badge>
     ),
   },
-
-  // {
-  //   id: 'actions',
-  //   enableHiding: false,
-  //   cell: ({ row }) => {
-  //     return (
-  //       <DropdownMenu>
-  //         <DropdownMenuTrigger asChild>
-  //           <Button variant="ghost" className="h-8 w-8 p-0">
-  //             <span className="sr-only">Open menu</span>
-  //             <DotsHorizontalIcon className="h-4 w-4" />
-  //           </Button>
-  //         </DropdownMenuTrigger>
-  //         <DropdownMenuContent align="end">
-  //           <DropdownMenuItem className="cursor-pointer flex gap-2">
-  //             <DollarSignIcon size={16} />
-  //             Make payment
-  //           </DropdownMenuItem>
-  //         </DropdownMenuContent>
-  //       </DropdownMenu>
-  //     );
-  //   },
-  // },
 ];
 
 export function InvoiceDataTable() {
@@ -277,10 +232,8 @@ export function InvoiceDataTable() {
     return invoices;
   }, [dataInvoices]);
 
-  data = [...invoiceMemo];
-
   const table = useReactTable({
-    data,
+    data: invoiceMemo,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
