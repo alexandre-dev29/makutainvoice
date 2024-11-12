@@ -3,3 +3,9 @@ export type MonthlyRevenueType = {
   monthRevenue: number;
   monthNumber: number;
 };
+export type ClientStatementType = {
+  invoiceNumber: string;
+  totalPaid: number;
+  totalAmount: number;
+  currency: string;
+};
