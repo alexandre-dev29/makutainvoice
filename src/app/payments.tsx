@@ -86,7 +86,7 @@ const PaymentsPage = () => {
                     },
                     index
                   ) => (
-                    <TableRow>
+                    <TableRow key={index}>
                       <TableCell className="hidden sm:table-cell">
                         {index + 1}
                       </TableCell>

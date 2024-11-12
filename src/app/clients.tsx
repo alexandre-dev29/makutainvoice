@@ -19,6 +19,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { makutaQueries, useCompanyState } from '@makutainv/configs';
 import { AddClients } from '@/components/add-clients';
+import { Link } from '@tanstack/react-router';
 
 const Clients = () => {
   const { currentCompany } = useCompanyState();
@@ -57,6 +58,13 @@ const Clients = () => {
                 <TableHead className="hidden md:table-cell">
                   VAT Number
                 </TableHead>
+                <TableHead className="hidden md:table-cell">
+                  Last Invoice On
+                </TableHead>
+                <TableHead className="hidden md:table-cell">
+                  Last Payment On
+                </TableHead>
+
                 <TableHead>
                   <span className="sr-only">Actions</span>
                 </TableHead>
@@ -74,15 +82,24 @@ const Clients = () => {
                       contact_person,
                       address,
                       vat_number,
+                      client_id,
+                      last_invoice_date,
+                      last_payment_date,
                     },
                     index
                   ) => (
-                    <TableRow>
+                    <TableRow key={index}>
                       <TableCell className="hidden sm:table-cell">
                         {index + 1}
                       </TableCell>
+
                       <TableCell className="font-medium">
-                        {client_name}
+                        <Link
+                          to={`/clients/${client_id}`}
+                          className="font-bold text-primary cursor-pointer"
+                        >
+                          {client_name}
+                        </Link>
                       </TableCell>
                       <TableCell>{contact_person}</TableCell>
                       <TableCell>{email}</TableCell>
@@ -93,6 +110,13 @@ const Clients = () => {
                       <TableCell className="hidden md:table-cell">
                         {vat_number}
                       </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {last_invoice_date}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {last_payment_date}
+                      </TableCell>
+
                       <TableCell className="flex gap-4">
                         {/* <PenBox size={20} className="text-primary" /> */}
                         {/* <Trash2 size={20} className="text-red-600" /> */}
