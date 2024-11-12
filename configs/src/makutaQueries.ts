@@ -12,6 +12,15 @@ export const makutaQueries = createQueryKeyStore({
       queryFn: async () =>
         await supabase.from('clients').select('*').eq('company_id', companyId),
     }),
+    details: (clientNumber: number) => ({
+      queryKey: [`client-${clientNumber}`, `${clientNumber}`],
+      queryFn: () =>
+        supabase
+          .from('clients')
+          .select('*, companies(*)')
+          .eq('client_id', clientNumber)
+          .single(),
+    }),
   },
   companies: {
     list: () => ({
@@ -30,7 +39,7 @@ export const makutaQueries = createQueryKeyStore({
       queryFn: async () =>
         await supabase
           .from('payments')
-          .select('*, invoices(company_id, invoice_number)')
+          .select('*, invoices!inner(company_id, invoice_number)')
           .eq('invoices.company_id', companyId),
     }),
   },
@@ -73,6 +82,17 @@ export const makutaQueries = createQueryKeyStore({
           .from('invoices')
           .select('*, clients(client_name, phone, email)'),
     }),
+    listByClients: (client_id: number) => ({
+      queryKey: [`invoices-clients-${client_id}`, client_id],
+      queryFn: () =>
+        supabase
+          .from('invoices')
+          .select('invoice_number, total_amount, total_paid, currency')
+          .eq('client_id', client_id)
+          .eq('isPaid', false)
+          .eq('isDraft', false),
+    }),
+
     listActiveAndNotComplete: () => ({
       queryKey: ['invoices'],
       queryFn: async () =>
