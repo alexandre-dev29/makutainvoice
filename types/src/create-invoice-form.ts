@@ -20,3 +20,20 @@ export const createInvoiceFormSchema = z.object({
   invoiceNote: z.string().optional(),
   isDraft: z.boolean().default(false),
 });
+
+export const editInvoiceItemsFormSchema = z.object({
+  invoiceItems: z
+    .object({
+      id: z.string(),
+      itemName: z.string(),
+      itemPrice: z.coerce
+        .number()
+        .min(1, { message: 'The invoice price must be greater than 0' }),
+      itemQuantity: z.coerce
+        .number()
+        .min(1, 'The quantity must be greater than 0'),
+      isNew: z.boolean().default(false),
+    })
+    .array()
+    .min(1),
+});

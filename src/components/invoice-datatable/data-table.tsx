@@ -34,13 +34,11 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
-import { makutaQueries } from '@makutainv/configs';
+import { makutaQueries, useCompanyState } from '@makutainv/configs';
 import { useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 import { Link } from '@tanstack/react-router';
-
-const data: Payment[] = [];
 
 export type Payment = {
   id: number;
@@ -60,7 +58,7 @@ const getBadgeColor = (status: string) => {
   switch (status) {
     case 'Active':
       return 'bg-yellow-500';
-    case 'Paid':
+    case 'Complete':
       return 'bg-green-600';
     case 'Cancel':
       return 'bg-red-600';
@@ -202,11 +200,13 @@ export function InvoiceDataTable() {
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
+  const { currentCompany } = useCompanyState();
   const [rowSelection, setRowSelection] = React.useState({});
   const { data: dataInvoices, isLoading } = useQuery({
-    ...makutaQueries.invoices.list(),
+    ...makutaQueries.invoices.listByCompany(Number.parseInt(currentCompany)),
     staleTime: 1000 * 60 * 10,
   });
+
   const invoiceMemo = useMemo<Payment[]>(() => {
     const invoices: Payment[] =
       (dataInvoices &&

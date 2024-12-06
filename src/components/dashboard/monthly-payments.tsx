@@ -10,6 +10,7 @@ import {
 import { MonthlyRevenueType, PaymentsType } from '@makutainv/types';
 import { useMemo } from 'react';
 import { calculateTotalRevenueByMonth } from '@/components/utils';
+import { useTranslation } from 'react-i18next';
 
 const chartConfig = {
   desktop: {
@@ -23,6 +24,7 @@ interface MonthlyPaymentsProps {
 }
 
 export function MonthlyPayments({ revenues }: MonthlyPaymentsProps) {
+  const { t } = useTranslation();
   const monthlyPayments = useMemo<Array<MonthlyRevenueType>>(() => {
     const formatter = new Intl.DateTimeFormat('fr', { month: 'long' });
 
@@ -36,7 +38,7 @@ export function MonthlyPayments({ revenues }: MonthlyPaymentsProps) {
   return (
     <Card className="col-span-4">
       <CardHeader>
-        <CardTitle>Monthly revenue</CardTitle>
+        <CardTitle>{t('monthly revenue')}</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

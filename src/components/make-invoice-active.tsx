@@ -20,7 +20,6 @@ import {
 
 export const MakeInvoiceActive: FC<{ invoiceId: number; isDraft: boolean }> = ({
   invoiceId,
-  isDraft,
 }) => {
   const { currentCompany } = useCompanyState();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -45,7 +44,9 @@ export const MakeInvoiceActive: FC<{ invoiceId: number; isDraft: boolean }> = ({
         refetchType: 'all',
       });
       await makutaQueryClient.invalidateQueries({
-        queryKey: makutaQueries.invoices.list._def,
+        queryKey: makutaQueries.invoices.listByCompany(
+          Number.parseInt(currentCompany)
+        ).queryKey,
         refetchType: 'all',
       });
       setIsModalOpen(false);
@@ -56,7 +57,7 @@ export const MakeInvoiceActive: FC<{ invoiceId: number; isDraft: boolean }> = ({
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="flex left-0 gap-2 px-0 mt-1">
+        <Button variant="outline" className="flex left-0 gap-2 px-2 mt-1">
           <CheckSquareIcon size={14} />
           <span>Make Active</span>
         </Button>

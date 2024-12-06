@@ -30,15 +30,20 @@ export const ClientStatementTemplate = ({
   invoiceData,
   clientInformation,
   companyInformation,
+  currentLocal,
 }: {
   companyInformation: CompanyType;
   clientInformation: ClientType;
   invoiceData: ClientStatementType[];
+  currentLocal: string;
 }) => (
   <Document>
     <Page size="A4" style={template_1_style.page}>
       <View style={{ display: 'flex', flexDirection: 'column' }}>
-        <StatementTitle logoSrc={`${companyInformation.logo}`} />
+        <StatementTitle
+          logoSrc={`${companyInformation.logo}`}
+          currentLocal={currentLocal}
+        />
         <CompanyInformationStatement
           company_name={`${companyInformation.company_name}`}
           logo={`${companyInformation.logo}`}

@@ -39,7 +39,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { Calendar } from '@/components/ui/calendar';
-import { FileSpreadsheetIcon, PlusCircle, User2 } from 'lucide-react';
+import { FileSpreadsheetIcon, PlusCircle } from 'lucide-react';
 import { InvoiceType } from '@makutainv/types';
 import {
   Select,
@@ -76,8 +76,6 @@ export const MakeInvoicePayment = ({
   const selectedInvoice = invoiceList.filter(
     (value) => value.invoice_id == selectedInvoiceNumber
   )[0];
-
-  console.log(selectedInvoiceNumber, selectedInvoice);
 
   const sendAddPayment: SubmitHandler<
     z.infer<typeof makePaymentSchema>
@@ -147,7 +145,9 @@ export const MakeInvoicePayment = ({
         });
 
         await makutaQueryClient.invalidateQueries({
-          queryKey: makutaQueries.invoices.list._def,
+          queryKey: makutaQueries.invoices.listByCompany(
+            Number.parseInt(currentCompany)
+          ).queryKey,
           refetchType: 'active',
         });
       }
@@ -200,7 +200,10 @@ export const MakeInvoicePayment = ({
                               <p>
                                 {value.invoice_number}
                                 <span className="font-medium text-foreground ml-2">
-                                  {`${value.total_amount} ${value.currency}`}
+                                  {`${value.total_amount} ${value.currency} `}
+                                  remaining{' '}
+                                  {(value?.total_amount ?? 0) -
+                                    (value?.total_paid ?? 0)}
                                 </span>
                               </p>
                             </div>
@@ -220,7 +223,15 @@ export const MakeInvoicePayment = ({
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="Amount" {...field} />
+                    <Input
+                      type="number"
+                      placeholder="Amount"
+                      {...field}
+                      max={
+                        (selectedInvoice?.total_amount ?? 0) -
+                        (selectedInvoice?.total_paid ?? 0)
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

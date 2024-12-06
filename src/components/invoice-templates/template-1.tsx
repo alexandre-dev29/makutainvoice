@@ -29,8 +29,10 @@ Font.register({
 export const InvoiceTemplate1 = ({
   invoiceData,
   items,
+  currentLocal,
 }: {
   invoiceData: InvoiceType;
+  currentLocal: string;
   items: Array<InvoiceItemType>;
 }) => (
   <Document>
@@ -39,7 +41,7 @@ export const InvoiceTemplate1 = ({
         <InvoiceTitle
           invoiceNumber={invoiceData.invoice_number}
           invoiceDueDate={`${invoiceData.due_date?.toLocaleDateString(
-            'fr-FR'
+            currentLocal
           )}`}
           logoSrc={`${invoiceData.companies?.logo}`}
           isDraft={invoiceData.isDraft ?? false}

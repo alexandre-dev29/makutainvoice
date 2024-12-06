@@ -38,6 +38,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { supabase, useCompanyState, useCurrentUser } from '@makutainv/configs';
 import { CompanyList } from './companies-list';
 import { getInitials } from '@/components/utils';
+import { LangSwitcher } from './lang-switcher';
 
 export const CoreLayout = () => {
   const { location } = useRouterState();
@@ -53,7 +54,13 @@ export const CoreLayout = () => {
   const { setCurrentInformation, setCurrentCompany } = useCompanyState();
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <div className="flex min-h-screen w-full flex-col bg-muted/40">
+      <div className="flex min-h-screen w-full flex-col bg-muted/40 relative">
+        {listWithoutLayout.includes(location.href) && (
+          <div className="flex items-center gap-4 mt-4">
+            <ThemeSwitcher />
+            <LangSwitcher />
+          </div>
+        )}
         {!listWithoutLayout.includes(location.href) && (
           <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
             <TooltipProvider>
@@ -139,7 +146,7 @@ export const CoreLayout = () => {
           </aside>
         )}
 
-        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14 relati">
           {!listWithoutLayout.includes(location.href) && (
             <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
               <Sheet>
@@ -199,8 +206,8 @@ export const CoreLayout = () => {
               <div className="flex-1">
                 <CompanyList />
               </div>
-
               <ThemeSwitcher />
+              <LangSwitcher />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -214,9 +221,9 @@ export const CoreLayout = () => {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>{currentUser.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                  <DropdownMenuItem>Support</DropdownMenuItem>
-                  <DropdownMenuSeparator />
+                  {/* <DropdownMenuItem>Settings</DropdownMenuItem>
+                  <DropdownMenuItem>Support</DropdownMenuItem> */}
+                  {/* <DropdownMenuSeparator /> */}
                   <DropdownMenuItem
                     className="cursor-pointer"
                     onClick={async () => {

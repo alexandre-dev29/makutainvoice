@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from '@/components/ui/card';
 import {
   Table,
@@ -12,27 +12,28 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from '@/components/ui/table';
 import { makutaQueries, makutaQueryClient, supabase } from '@makutainv/configs';
 import { useQuery } from '@tanstack/react-query';
 import { AddUpdateCompany } from '@/components/add-update-company';
 import { UploadCloud } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { createRef, useMemo } from 'react';
+import React, { createRef, useMemo } from 'react';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger,
+  TooltipTrigger
 } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 
 const CompaniesPage = () => {
   const { data } = useQuery({
     ...makutaQueries.companies.list(),
-    staleTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 10
   });
+
   const uploadCompanyImage = async (
     value: React.ChangeEvent<HTMLInputElement>,
     company_name: string,
@@ -41,7 +42,7 @@ const CompaniesPage = () => {
     toast({
       variant: 'default',
       title: 'Uploading your logo',
-      description: 'Please wait while your logo is uploading',
+      description: 'Please wait while your logo is uploading'
     });
     if (value && value.target && value.target.files && value.target.files[0]) {
       const companyLogo = value.target.files[0];
@@ -55,19 +56,19 @@ const CompaniesPage = () => {
           companyLogo,
           {
             cacheControl: '3600',
-            upsert: false,
+            upsert: false
           }
         );
       if (error) {
         toast({
           variant: 'destructive',
           title: 'Error while trying to upload the logo',
-          description: error?.message,
+          description: error?.message
         });
       }
       if (data) {
         const {
-          data: { publicUrl },
+          data: { publicUrl }
         } = supabase.storage.from('company_logo').getPublicUrl(`${data?.path}`);
         const { error } = await supabase
           .from('companies')
@@ -77,19 +78,18 @@ const CompaniesPage = () => {
           // invalidate all the list queries
           await makutaQueryClient.invalidateQueries({
             queryKey: makutaQueries.companies.list._def,
-            refetchType: 'active',
+            refetchType: 'active'
           });
           toast({
             variant: 'default',
             title: 'Uploading logo',
-            description: 'The logo has been uploaded successfully',
+            description: 'The logo has been uploaded successfully'
           });
         }
       }
     }
   };
   const { toast } = useToast();
-
   const refsById = useMemo(() => {
     const refs = {};
     data?.data?.forEach((item) => {
@@ -140,14 +140,14 @@ const CompaniesPage = () => {
                   data.data &&
                   data.data.map(
                     ({
-                      company_name,
-                      email,
-                      phone,
-                      address,
-                      created_at,
-                      logo,
-                      company_id,
-                    }) => (
+                       company_name,
+                       email,
+                       phone,
+                       address,
+                       created_at,
+                       logo,
+                       company_id
+                     }) => (
                       <TableRow key={Math.random()}>
                         <TableCell className="hidden sm:table-cell">
                           {logo ? (

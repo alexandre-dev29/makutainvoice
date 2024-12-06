@@ -9,9 +9,11 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Link } from '@tanstack/react-router';
 import MakutaDashboard from '@/components/dashboard/makuta-dashboard';
+import { useTranslation } from 'react-i18next';
 
 export function HomePage() {
   const { currentUser, setCurrentUser } = useCurrentUser();
+  const { t } = useTranslation();
   const { currentCompany, setCurrentCompany, setCurrentInformation } =
     useCompanyState();
 
@@ -45,11 +47,14 @@ export function HomePage() {
     <div>
       <div className="flex items-center justify-between p-6">
         <h2 className=" text-4xl font-bold">
-          Welcome <span className=" text-primary"> {currentUser.name}</span>
+          {t('welcome')}{' '}
+          <span className=" text-primary"> {currentUser.name}</span>
         </h2>
         {currentCompany === '' || currentCompany === 'undefined' ? (
           <Link to="/companies">
-            <Button variant="default">Start by creating a new company</Button>
+            <Button variant="default">
+              {t('start-by-creating-a-new-company')}
+            </Button>
           </Link>
         ) : (
           ''

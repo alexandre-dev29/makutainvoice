@@ -82,6 +82,15 @@ export const makutaQueries = createQueryKeyStore({
           .from('invoices')
           .select('*, clients(client_name, phone, email)'),
     }),
+    listByCompany: (companyId: number) => ({
+      queryKey: [`invoices-company-${companyId}`],
+      queryFn: async () =>
+        await supabase
+          .from('invoices')
+          .select('*, clients(client_name, phone, email)')
+          .eq('company_id', companyId),
+    }),
+
     listByClients: (client_id: number) => ({
       queryKey: [`invoices-clients-${client_id}`, client_id],
       queryFn: () =>

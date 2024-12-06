@@ -11,9 +11,11 @@ import { useQuery } from '@tanstack/react-query';
 import { MonthlyPayments } from '@/components/dashboard/monthly-payments';
 import { RecentPayments } from '@/components/recent-payments';
 import { formatNumber } from '@/components/utils';
+import { useTranslation } from 'react-i18next';
 
 const MakutaDashboard = () => {
   const { currentCompany } = useCompanyState();
+  const { t } = useTranslation();
   const { data } = useQuery(
     makutaQueries.dashboardRequests.listInvoiceMoneyByCompany(
       Number.parseInt(currentCompany)
@@ -48,7 +50,7 @@ const MakutaDashboard = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total invoices
+              {t('total-invoices')}
             </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -71,7 +73,9 @@ const MakutaDashboard = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total revenue</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t('total-revenue')}
+            </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -94,7 +98,7 @@ const MakutaDashboard = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total remaining
+              {t('total-remaining')}
             </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -119,7 +123,7 @@ const MakutaDashboard = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Revenue this month
+              {t('revenue-this-month')}
             </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -149,15 +153,15 @@ const MakutaDashboard = () => {
         />
         <Card className="col-span-3">
           <CardHeader>
-            <CardTitle>Recent Sales</CardTitle>
+            <CardTitle>{t('recent-payments')}</CardTitle>
             <CardDescription>
-              You made{' '}
+              {t('you-made')}
               {paymentsData &&
                 paymentsData.data &&
                 paymentsData.data.filter((value) =>
                   isThisMonth(value.payment_date)
                 ).length}{' '}
-              sales this month.
+              {t('payments-this-month')}
             </CardDescription>
           </CardHeader>
           <CardContent>

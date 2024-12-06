@@ -212,7 +212,7 @@ export type Database = {
         Row: {
           description: string
           invoice_id: number
-          item_id: number
+          item_id: string
           price: number
           quantity: number
           tax_rate: number | null
@@ -220,7 +220,7 @@ export type Database = {
         Insert: {
           description: string
           invoice_id: number
-          item_id?: number
+          item_id?: string
           price: number
           quantity: number
           tax_rate?: number | null
@@ -228,7 +228,7 @@ export type Database = {
         Update: {
           description?: string
           invoice_id?: number
-          item_id?: number
+          item_id?: string
           price?: number
           quantity?: number
           tax_rate?: number | null

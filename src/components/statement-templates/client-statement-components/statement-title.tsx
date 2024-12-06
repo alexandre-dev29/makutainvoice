@@ -2,7 +2,13 @@ import { Image, Text, View } from '@react-pdf/renderer';
 import * as React from 'react';
 import { template_1_style_statement } from '@/components/statement-templates/client-statement-components/styleConfig';
 
-export const StatementTitle = ({ logoSrc }: { logoSrc: string }) => (
+export const StatementTitle = ({
+  logoSrc,
+  currentLocal,
+}: {
+  logoSrc: string;
+  currentLocal: string;
+}) => (
   <View style={template_1_style_statement.titleContainer}>
     <View style={template_1_style_statement.spaceBetween}>
       <View>
@@ -10,7 +16,7 @@ export const StatementTitle = ({ logoSrc }: { logoSrc: string }) => (
           Client Statement
         </Text>
         <Text style={template_1_style_statement.reportSubTitle}>
-          Created on : {new Date().toLocaleDateString('fr-FR')}
+          Created on : {new Date().toLocaleDateString(currentLocal)}
         </Text>
       </View>
       <View

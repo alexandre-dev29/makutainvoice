@@ -13,44 +13,47 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from '@/components/ui/form';
 import { ToastAction } from '@/components/ui/toast';
+import { useTranslation } from 'react-i18next';
 
 export function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const schema = z.object({
     email: z
-      .string({ message: 'Email is required' })
-      .email('Please write a correct email'),
+      .string({ message: t('email_require') })
+      .email(t('please-write-a-correct-email'))
   });
   const forgotPasswordForm = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema)
   });
   const sendForgotPasswordLink: SubmitHandler<z.infer<typeof schema>> = async ({
-    email,
-  }) => {
+                                                                                 email
+                                                                               }) => {
     setIsLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${import.meta.env.VITE_WEBSERVER}/auth/update-password`,
+      redirectTo: `${import.meta.env.VITE_WEBSERVER}/auth/update-password`
     });
     setIsLoading(false);
     if (error) {
       toast({
         variant: 'destructive',
-        title: 'Error while trying to reset your password',
-        description: error?.message,
+        title: t('error-while-trying-to-reset-your-password'),
+        description: error?.message
       });
     }
     forgotPasswordForm.reset();
     toast({
-      title: 'Forgot password',
-      description:
-        'An email has been sent to you, please click on the link to reset your password',
-      action: <ToastAction altText="Goto schedule to undo">Okay</ToastAction>,
+      title: t('forgot-your-password'),
+      description: t(
+        'an-email-has-been-sent-to-you-please-click-on-the-link-to-reset-your-password'
+      ),
+      action: <ToastAction altText={t('okay')}>{t('okay')}</ToastAction>
     });
     await router.invalidate();
     await router.navigate({ to: '/auth/login' });
@@ -61,9 +64,11 @@ export function ForgotPasswordPage() {
         <div className="flex items-center justify-center py-12">
           <div className="mx-auto grid w-[350px] gap-6">
             <div className="grid gap-2 text-center">
-              <h1 className="text-3xl font-bold">Forget password ?</h1>
+              <h1 className="text-3xl font-bold">
+                {t('forgot-your-password')}
+              </h1>
               <p className="text-balance text-muted-foreground">
-                Enter your email below to get reset code
+                {t('enter-your-email-below-to-get-reset-code')}
               </p>
             </div>
             <form
@@ -75,7 +80,7 @@ export function ForgotPasswordPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t('email')}</FormLabel>
                     <FormControl>
                       <Input placeholder="m@example.com" {...field} />
                     </FormControl>
@@ -85,12 +90,12 @@ export function ForgotPasswordPage() {
               />
 
               <Button type="submit" className="w-full">
-                {isLoading ? 'Loading...' : 'Send'}
+                {isLoading ? 'Loading...' : t('send')}
               </Button>
               <div className="mt-4 text-center text-sm">
-                You remember your password?{' '}
+                {t('you-remember-your-password')}
                 <Link to={'/auth/login'} className="underline">
-                  Sign in
+                  {t('sign-in')}
                 </Link>
               </div>
             </form>

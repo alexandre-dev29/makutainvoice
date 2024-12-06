@@ -131,7 +131,9 @@ const CreateInvoiceForm = () => {
           action: <ToastAction altText="Okay">Okay</ToastAction>,
         });
         await makutaQueryClient.invalidateQueries({
-          queryKey: makutaQueries.invoices.list._def,
+          queryKey: makutaQueries.invoices.listByCompany(
+            Number.parseInt(currentCompany)
+          ).queryKey,
           refetchType: 'active',
         });
         invoiceForm.reset();

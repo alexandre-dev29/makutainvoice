@@ -23,7 +23,10 @@ type currentUserTypeState = {
   currentUser: UserType;
   setCurrentUser: (currentUser: UserType) => void;
 };
-
+type languageStateProps = {
+  currentLanguage: string;
+  setCurrentLanguage: (currentLanguage: string) => void;
+};
 export const useCompanyState = create<companyStateProps>()(
   devtools(
     persist(
@@ -52,6 +55,21 @@ export const useCurrentUser = create<currentUserTypeState>()(
       }),
       {
         name: 'makuta-user-states',
+      }
+    )
+  )
+);
+
+export const useLanguageState = create<languageStateProps>()(
+  devtools(
+    persist(
+      (set) => ({
+        currentLanguage: 'en',
+        setCurrentLanguage: (currentLanguage: string) =>
+          set({ currentLanguage: currentLanguage }),
+      }),
+      {
+        name: 'makuta-lang-states',
       }
     )
   )

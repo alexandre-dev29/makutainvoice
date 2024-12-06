@@ -15,18 +15,20 @@ import {
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const schema = z.object({
     email: z
-      .string({ message: 'Email is required' })
-      .email('Please write a correct email'),
+      .string({ message: t('email_require') })
+      .email(t('please-write-a-correct-email')),
     password: z
-      .string({ message: 'Password is required' })
-      .min(6, 'Password must be at least 6 characters'),
+      .string({ message: t('password_required') })
+      .min(6, t('password-must-be-at-least-6-characters')),
   });
 
   const myForm = useForm<z.infer<typeof schema>>({
@@ -45,7 +47,7 @@ export function LoginPage() {
     if (error) {
       toast({
         variant: 'destructive',
-        title: 'Error while trying to log you in',
+        title: t('error-while-trying-to-log-you-in'),
         description: error?.message,
       });
     }
@@ -64,9 +66,9 @@ export function LoginPage() {
             onSubmit={myForm.handleSubmit(signinUser)}
           >
             <div className="grid gap-2 text-center">
-              <h1 className="text-3xl font-bold">Login</h1>
+              <h1 className="text-3xl font-bold">{t('login')}</h1>
               <p className="text-balance text-muted-foreground">
-                Enter your email below to login to your account
+                {t('enter-your-email-below-to-login-to-your-account')}
               </p>
             </div>
             <FormField
@@ -74,7 +76,7 @@ export function LoginPage() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t('email')}</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="m@example.com"
@@ -92,7 +94,7 @@ export function LoginPage() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t('password')}</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="password"
@@ -108,18 +110,18 @@ export function LoginPage() {
               to={'/auth/forgot-password'}
               className="ml-auto inline-block text-sm underline -my-2"
             >
-              Forgot your password?
+              {t('forgot-your-password')}
             </Link>
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Loading...' : 'Login'}
+              {isLoading ? 'Loading...' : t('login')}
             </Button>
             {/*<Button variant="outline" className="w-full">*/}
             {/*  Login with Google*/}
             {/*</Button>*/}
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{' '}
+              {t('dont-have-an-account')}
               <Link to={'/auth/register'} className="underline">
-                Sign up
+                {t('sign-up')}
               </Link>
             </div>
           </form>

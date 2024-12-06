@@ -16,11 +16,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { ToastAction } from '@/components/ui/toast';
+import { useTranslation } from 'react-i18next';
 
 export function UpdatePasswordPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const router = useRouter();
+  const { t } = useTranslation();
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
 
   useEffect(() => {
@@ -33,8 +35,8 @@ export function UpdatePasswordPage() {
 
   const schema = z.object({
     password: z
-      .string({ message: 'Password is required' })
-      .min(6, 'The password must have at least 6 characters'),
+      .string({ message: t('password_required') })
+      .min(6, t('password-must-be-at-least-6-characters')),
   });
   const updatePasswordForm = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -50,16 +52,16 @@ export function UpdatePasswordPage() {
     if (error) {
       toast({
         variant: 'destructive',
-        title: 'Error while trying to updated your password',
+        title: t('error-while-trying-to-updated-your-password'),
         description: error?.message,
       });
     }
     if (data) {
       updatePasswordForm.reset();
       toast({
-        title: 'Password Updated',
-        description: 'Your password has been updated successfully.',
-        action: <ToastAction altText="Okay">Okay</ToastAction>,
+        title: t('password-updated'),
+        description: t('your-password-has-been-updated-successfully'),
+        action: <ToastAction altText={t('okay')}>{t('okay')}</ToastAction>,
       });
       await router.invalidate();
       await router.navigate({ to: '/auth/login' });
@@ -73,9 +75,11 @@ export function UpdatePasswordPage() {
           {isPasswordRecovery && (
             <div className="mx-auto grid w-[350px] gap-6">
               <div className="grid gap-2 text-center">
-                <h1 className="text-3xl font-bold">Update your password ?</h1>
+                <h1 className="text-3xl font-bold">
+                  {t('update-your-password')}
+                </h1>
                 <p className="text-balance text-muted-foreground">
-                  Enter your new password below to change it.
+                  {t('enter-your-new-password')}
                 </p>
               </div>
               <form
@@ -87,7 +91,7 @@ export function UpdatePasswordPage() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Your new password</FormLabel>
+                      <FormLabel>{t('your-new-password')}</FormLabel>
                       <FormControl>
                         <Input
                           type="password"
@@ -101,12 +105,12 @@ export function UpdatePasswordPage() {
                 />
 
                 <Button type="submit" className="w-full">
-                  {isLoading ? 'Loading...' : 'Update'}
+                  {isLoading ? 'Loading...' : t('update')}
                 </Button>
                 <div className="mt-4 text-center text-sm">
-                  You remember your password?{' '}
+                  {t('you-remember-your-password')}
                   <Link to={'/auth/login'} className="underline">
-                    Sign in
+                    {t('sign-in')}
                   </Link>
                 </div>
               </form>
@@ -114,7 +118,9 @@ export function UpdatePasswordPage() {
           )}
           {!isPasswordRecovery && (
             <p>
-              You cannot update your password without a mail being sent to you
+              {t(
+                'you-cannot-update-your-password-without-a-mail-being-sent-to-you'
+              )}
             </p>
           )}
         </div>

@@ -10,7 +10,7 @@ import {
 import React from 'react';
 import { useParams } from '@tanstack/react-router';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
-import { makutaQueries } from '@makutainv/configs';
+import { makutaQueries, useLanguageState } from '@makutainv/configs';
 import { PDFViewer } from '@react-pdf/renderer';
 import { ClientStatementTemplate } from '@/components/statement-templates/client-statement-1';
 
@@ -26,6 +26,7 @@ export const ClientDetails = () => {
     ...makutaQueries.invoices.listByClients(parseInt(clientNumber)),
     enabled: !isLoading,
   });
+  const { currentLanguage } = useLanguageState();
   return (
     <div className="flex gap-8">
       <div className=" flex-1">
@@ -122,6 +123,7 @@ export const ClientDetails = () => {
             <ClientStatementTemplate
               clientInformation={{ ...data, contact_person: '' }}
               companyInformation={data?.companies}
+              currentLocal={currentLanguage}
               invoiceData={[
                 ...invoiceData.data.map(
                   ({ invoice_number, total_paid, total_amount, currency }) => ({
