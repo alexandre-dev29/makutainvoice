@@ -23,6 +23,7 @@ import {
   useCompanyState,
 } from '@makutainv/configs';
 import { ToastAction } from '@/components/ui/toast';
+import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@/hooks/use-toast';
 
 export const EditInvoiceDetails: FC<{
@@ -54,10 +55,11 @@ export const EditInvoiceDetails: FC<{
     z.infer<typeof editInvoiceItemsFormSchema>
   > = async ({ invoiceItems: submittedItems }) => {
     setIsLoading(true);
+    await supabase.from('invoiceitems').delete().eq('invoice_id', invoiceId);
     const { error } = await supabase.from('invoiceitems').upsert(
       submittedItems.map((currentItem) => ({
         invoice_id: invoiceId,
-        item_id: currentItem.id,
+        item_id: currentItem.id === '' ? uuidv4() : currentItem.id,
         description: currentItem.itemName,
         price: currentItem.itemPrice,
         quantity: currentItem.itemQuantity,

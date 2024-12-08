@@ -32,7 +32,7 @@ export const Invoice1TableBody = ({
   currency: string;
   invoiceItems: InvoiceItemType[];
 }) =>
-  invoiceItems.map((receipt) => (
+  invoiceItems.map((receipt, index) => (
     <Fragment key={receipt.item_id}>
       <View
         style={{
@@ -44,7 +44,7 @@ export const Invoice1TableBody = ({
         }}
       >
         <View style={{ width: 70, ...template_1_style.tBodyElements }}>
-          <Text>{receipt.item_id}</Text>
+          <Text>{index + 1}</Text>
         </View>
         <View style={{ ...template_1_style.tBodyElements, width: 580 }}>
           <Text>{receipt.description}</Text>
