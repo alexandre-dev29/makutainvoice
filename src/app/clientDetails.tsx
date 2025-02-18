@@ -25,7 +25,14 @@ export const ClientDetails = () => {
   const { data: invoiceData } = useQuery({
     ...makutaQueries.invoices.listByClients(parseInt(clientNumber)),
     enabled: !isLoading,
+    networkMode: 'online',
   });
+  const { data: invoiceDataStatement } = useQuery({
+    ...makutaQueries.invoices.listByClientsStatement(parseInt(clientNumber)),
+    enabled: !isLoading,
+    networkMode: 'online',
+  });
+
   const { currentLanguage } = useLanguageState();
   return (
     <div className="flex gap-8">
@@ -39,17 +46,7 @@ export const ClientDetails = () => {
               </CardTitle>
               <CardDescription>Date: November 23, 2023</CardDescription>
             </div>
-            <div className="ml-auto flex items-center gap-1">
-              {/*<PDFDownloadLink*/}
-              {/*  document={<InvoiceDocument />}*/}
-              {/*  fileName={`${data?.invoice_number}.pdf`}*/}
-              {/*>*/}
-              {/*  <div className="flex items-center gap-2">*/}
-              {/*    <DownloadCloud size={14} />*/}
-              {/*    <span>Download</span>*/}
-              {/*  </div>*/}
-              {/*</PDFDownloadLink>*/}
-            </div>
+            <div className="ml-auto flex items-center gap-1"></div>
           </CardHeader>
           <CardContent className="p-6 text-sm">
             <div className="grid gap-3">
@@ -124,16 +121,7 @@ export const ClientDetails = () => {
               clientInformation={{ ...data, contact_person: '' }}
               companyInformation={data?.companies}
               currentLocal={currentLanguage}
-              invoiceData={[
-                ...invoiceData.data.map(
-                  ({ invoice_number, total_paid, total_amount, currency }) => ({
-                    invoiceNumber: invoice_number,
-                    totalAmount: total_amount ?? 0,
-                    totalPaid: total_paid ?? 0,
-                    currency,
-                  })
-                ),
-              ]}
+              invoiceData={invoiceDataStatement}
             />
           )}
         </PDFViewer>

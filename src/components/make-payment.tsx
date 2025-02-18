@@ -105,10 +105,11 @@ export const MakeInvoicePayment = ({
     }
     setIsLoading(false);
     if (!error) {
-      const { error: errorUpdate } = await supabase
+      const { error: errorUpdate, data: dataforUpdate } = await supabase
         .from('invoices')
         .update({ total_paid: (selectedInvoice?.total_paid ?? 0) + amount })
-        .eq('invoice_id', invoiceNumber);
+        .eq('invoice_id', invoiceNumber)
+        .select('client_id');
 
       if (!errorUpdate) {
         addPaymentForm.reset();
@@ -141,6 +142,12 @@ export const MakeInvoicePayment = ({
         });
         await makutaQueryClient.invalidateQueries({
           queryKey: makutaQueries.invoices.listActiveAndNotComplete._def,
+          refetchType: 'active',
+        });
+        await makutaQueryClient.invalidateQueries({
+          queryKey: makutaQueries.invoices.listByClients(
+            dataforUpdate[0].client_id
+          ).queryKey,
           refetchType: 'active',
         });
 

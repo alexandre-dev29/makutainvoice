@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Document, Page, View, Font } from '@react-pdf/renderer';
-import { ClientStatementType, ClientType, CompanyType } from '@makutainv/types';
+import { ClientType, CompanyType, NewStatementType } from '@makutainv/types';
 import { template_1_style } from '@/components/invoice-templates/template1-components/styleConfig';
 import { ClientInformationStatement } from '@/components/statement-templates/client-statement-components/client-information';
 import { CompanyInformationStatement } from '@/components/statement-templates/client-statement-components/company-information';
@@ -34,58 +34,52 @@ export const ClientStatementTemplate = ({
 }: {
   companyInformation: CompanyType;
   clientInformation: ClientType;
-  invoiceData: ClientStatementType[];
+  invoiceData: NewStatementType[] | undefined;
   currentLocal: string;
-}) => (
-  <Document>
-    <Page size="A4" style={template_1_style.page}>
-      <View style={{ display: 'flex', flexDirection: 'column' }}>
-        <StatementTitle
-          logoSrc={`${companyInformation.logo}`}
-          currentLocal={currentLocal}
-        />
-        <CompanyInformationStatement
-          company_name={`${companyInformation.company_name}`}
-          logo={`${companyInformation.logo}`}
-          phone={`${companyInformation.phone}`}
-          email={`${companyInformation.email}`}
-          address={`${companyInformation.address}`}
-          company_id={companyInformation.company_id}
-          created_by_id={''}
-        />
-        <ClientInformationStatement
-          phone={`${clientInformation.phone}`}
-          email={`${clientInformation.email}`}
-          address={`${clientInformation.address}`}
-          client_name={`${clientInformation.client_name}`}
-          client_id={clientInformation.client_id ?? 0}
-          company_id={clientInformation.company_id}
-          contact_person={''}
-        />
-        <ClientStatementTableHead />
-        <ClientStatementTableBody
-          invoiceItems={[
-            ...invoiceData.map((value) => ({
-              invoiceNumber: value.invoiceNumber,
-              totalPaid: value.totalPaid,
-              totalAmount: value.totalAmount,
-              currency: value.currency,
-            })),
-          ]}
-          currency={invoiceData[0]?.currency}
-        />
-        <ClientStatementTableTotal
-          invoiceItem={[
-            ...invoiceData.map((value) => ({
-              invoiceNumber: value.invoiceNumber,
-              totalPaid: value.totalPaid,
-              totalAmount: value.totalAmount,
-              currency: value.currency,
-            })),
-          ]}
-          currency={invoiceData[0]?.currency}
-        />
-      </View>
-    </Page>
-  </Document>
-);
+}) => {
+  const total = invoiceData?.reduce(
+    (sum, item) => sum + ((item.total_amount ?? 0) - (item.total_paid ?? 0)),
+    0
+  );
+  return (
+    <Document>
+      <Page size="A4" style={template_1_style.page}>
+        <View style={{ display: 'flex', flexDirection: 'column' }}>
+          <StatementTitle
+            logoSrc={`${companyInformation.logo}`}
+            currentLocal={currentLocal}
+          />
+          <CompanyInformationStatement
+            company_name={`${companyInformation.company_name}`}
+            logo={`${companyInformation.logo}`}
+            phone={`${companyInformation.phone}`}
+            email={`${companyInformation.email}`}
+            address={`${companyInformation.address}`}
+            company_id={companyInformation.company_id}
+            created_by_id={''}
+          />
+          <ClientInformationStatement
+            phone={`${clientInformation.phone}`}
+            email={`${clientInformation.email}`}
+            address={`${clientInformation.address}`}
+            client_name={`${clientInformation.client_name}`}
+            client_id={clientInformation.client_id ?? 0}
+            company_id={clientInformation.company_id}
+            currency={invoiceData === undefined ? '' : invoiceData[0].currency}
+            total={total}
+            contact_person={''}
+          />
+          <ClientStatementTableHead />
+          <ClientStatementTableBody
+            invoiceItems={invoiceData === undefined ? [] : invoiceData}
+            currency={invoiceData === undefined ? '' : invoiceData[0].currency}
+          />
+          <ClientStatementTableTotal
+            invoiceItem={invoiceData === undefined ? [] : invoiceData}
+            currency={invoiceData === undefined ? '' : invoiceData[0].currency}
+          />
+        </View>
+      </Page>
+    </Document>
+  );
+};
