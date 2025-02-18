@@ -35,6 +35,8 @@ export type ClientType = {
   phone: string | null;
   address: string | null;
   contact_person?: string;
+  total?: number;
+  currency?: string;
 };
 export type CompanyType = {
   company_id: number;

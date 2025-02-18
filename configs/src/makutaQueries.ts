@@ -101,6 +101,42 @@ export const makutaQueries = createQueryKeyStore({
           .eq('isPaid', false)
           .eq('isDraft', false),
     }),
+    listByClientsStatement: (client_id: number) => ({
+      queryKey: [`invoices-statement-${client_id}`, client_id, 'statement'],
+      queryFn: async () => {
+        const { data: invoices, error: invoiceError } = await supabase
+          .from('invoices')
+          .select(
+            'invoice_id, invoice_number, invoice_date, total_amount, total_paid, currency'
+          )
+          .eq('client_id', client_id)
+          .eq('isPaid', false)
+          .eq('isDraft', false);
+        if (invoiceError) {
+          console.error('Error fetching invoices:', invoiceError);
+        }
+
+        // Fetch payments
+
+        const { data: payments, error: paymentError } = await supabase
+          .from('payments')
+          .select('payment_id, payment_date, amount, invoice_id, reference');
+
+        if (paymentError) {
+          console.error('Error fetching payments:', paymentError);
+        }
+
+        const invoicesWithPayments = invoices?.map((invoice) => {
+          return {
+            ...invoice,
+            payments: payments?.filter(
+              (pay) => pay.invoice_id === invoice.invoice_id
+            ),
+          };
+        });
+        return invoicesWithPayments;
+      },
+    }),
 
     listActiveAndNotComplete: () => ({
       queryKey: ['invoices'],
