@@ -71,7 +71,6 @@ export const template_1_style_statement = StyleSheet.create({
   tBodyElements: {
     fontSize: 10,
     fontWeight: 'normal',
-    paddingVertical: 4,
     paddingLeft: 8,
     color: 'hsl( 220 8.9% 46.1%)',
     fontFamily: 'Poppins',
@@ -93,7 +92,6 @@ export const template_1_style_statement = StyleSheet.create({
     fontSize: 9,
     paddingTop: 4,
     paddingLeft: 7,
-    flex: 1.5,
     borderColor: 'whitesmoke',
     borderBottomWidth: 1,
     fontFamily: 'Poppins',
